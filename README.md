@@ -1,36 +1,191 @@
-<<<<<<< HEAD
-# React + TypeScript + Vite
+# SecureCode Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**SecureCode Analyzer** is a web-based Secure Coding Review and Static Application Security Testing (SAST) platform designed to identify common security vulnerabilities in source code and provide actionable remediation guidance.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **Application & Language Selection** — Select the application and programming language for security review.
+* **Code Input** — Submit source code by:
 
-## React Compiler
+  * Pasting code into the integrated editor
+  * Uploading a source-code file
+* **Static Security Analysis** — Analyze source code for common security weaknesses.
+* **Vulnerability Detection** — Identify security issues and classify them by severity.
+* **Security Findings** — View vulnerability type, severity, affected file, line number, description, and impact.
+* **Remediation Guidance** — Get secure coding recommendations and suggested remediation.
+* **Security Dashboard** — View security status, scan information, and vulnerability summaries.
+* **Scan History** — Track previous security reviews.
+* **Reports** — Document and export security findings.
+* **Responsive UI** — Designed for desktop, tablet, and mobile devices.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Security Analysis
 
-## Expanding the Oxlint configuration
+The platform is designed to use static analysis techniques and security rules to identify vulnerabilities such as:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+* SQL Injection
+* Command Injection
+* Hardcoded Credentials
+* Weak Cryptography
+* Insecure Deserialization
+* Sensitive Information Exposure
+* Cross-Site Scripting (XSS)
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+The analysis architecture can integrate tools such as **Semgrep** and **Bandit**, along with custom security rules.
+
+## Technology Stack
+
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* React Router
+* Lucide React
+
+### Backend
+
+* Node.js
+* Express.js
+* TypeScript
+
+### Security Analysis
+
+* Semgrep
+* Bandit
+* Custom Security Rules
+
+### Database
+
+* MongoDB / MongoDB Atlas
+
+## Architecture
+
+```text
+User
+ │
+ ▼
+React Frontend
+ │
+ │ REST API
+ ▼
+Node.js + Express Backend
+ │
+ ▼
+Security Analysis Engine
+ │
+ ├── Semgrep
+ ├── Bandit
+ └── Custom Rules
+ │
+ ▼
+Normalized Security Findings
+ │
+ ▼
+Results & Reports
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-=======
-# CodeAlpha_SecureCode-Analyzer
->>>>>>> ac325859a20523c1d7d0faf85c4295c479ac6b07
+## Application Workflow
+
+```text
+Select Application & Language
+            ↓
+     Paste Code / Upload File
+            ↓
+         Analyze Code
+            ↓
+      Static Security Scan
+            ↓
+     Vulnerability Findings
+            ↓
+     Security Recommendations
+            ↓
+        Remediation
+            ↓
+       Security Report
+```
+
+## Project Structure
+
+```text
+CodeAlpha_SecureCode-Analyzer/
+│
+├── src/
+│   ├── components/
+│   ├── layouts/
+│   ├── pages/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+│
+├── public/
+├── package.json
+├── vite.config.ts
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+└── README.md
+```
+
+## Installation
+
+### Prerequisites
+
+* Node.js
+* npm
+* Git
+
+### Clone Repository
+
+```bash
+git clone https://github.com/pranav-ithape/CodeAlpha_SecureCode-Analyzer.git
+cd CodeAlpha_SecureCode-Analyzer
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+Open the local URL provided by Vite in your browser.
+
+## Security Considerations
+
+Since the application handles source code, the implementation should:
+
+* Validate uploaded files and file sizes.
+* Reject unsupported file types.
+* Validate API input.
+* Never directly execute untrusted uploaded code on the main server.
+* Run security-analysis tools in an isolated environment.
+* Store credentials and API keys securely using environment variables.
+
+## Future Enhancements
+
+* Additional programming-language support
+* OWASP Top 10 and CWE mapping
+* Dependency vulnerability scanning
+* GitHub repository scanning
+* CI/CD integration
+* Automated remediation suggestions
+* Role-based access control
+* Advanced security reports
+
+## Author
+
+**Pranav Ithape**
+
+GitHub: [https://github.com/pranav-ithape](https://github.com/pranav-ithape)
+
+Repository: [https://github.com/pranav-ithape/CodeAlpha_SecureCode-Analyzer](https://github.com/pranav-ithape/CodeAlpha_SecureCode-Analyzer)
+
+---
+
+**SecureCode Analyzer — Find vulnerabilities. Fix faster. Code securely.**
