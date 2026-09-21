@@ -1,0 +1,62 @@
+rules:
+  - id: java-sql-injection
+    languages: [java]
+    patterns:
+      - pattern-either:
+          - pattern: "String $SQL = ... + $VAR + ...;\n...\n$STMT.executeQuery($SQL);"
+          - pattern: "$STMT.executeQuery(..., ... + $VAR + ..., ...);"
+    message: "Potential SQL injection detected."
+    severity: ERROR
+    metadata:
+      category: sql-injection
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Use PreparedStatement instead of concatenating strings."
+
+  - id: java-command-injection
+    languages: [java]
+    patterns:
+      - pattern: "Runtime.getRuntime().exec($CMD)"
+    message: "Using Runtime.exec() is dangerous if input is not sanitized."
+    severity: ERROR
+    metadata:
+      category: command-injection
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Use ProcessBuilder and avoid passing raw strings directly."
+
+  - id: java-hardcoded-secret
+    languages: [java]
+    patterns:
+      - pattern-regex: "(?i)(password|secret|token|api_key)\\s*=\\s*['\"][a-zA-Z0-9_-]+['\"]"
+    message: "Hardcoded secret detected. This can lead to sensitive information exposure."
+    severity: WARNING
+    metadata:
+      category: hardcoded-secret
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Use environment variables or a secret manager."
+
+  - id: java-weak-cryptography
+    languages: [java]
+    patterns:
+      - pattern: "MessageDigest.getInstance(\"MD5\")"
+    message: "MD5 is a weak cryptographic algorithm."
+    severity: WARNING
+    metadata:
+      category: weak-cryptography
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Use SHA-256 or stronger algorithms."
+
+  - id: java-unsafe-deserialization
+    languages: [java]
+    patterns:
+      - pattern: "$X.readObject()"
+    message: "Unsafe deserialization of objects can lead to remote code execution."
+    severity: ERROR
+    metadata:
+      category: unsafe-deserialization
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Avoid deserializing untrusted data or use safe alternatives like JSON."

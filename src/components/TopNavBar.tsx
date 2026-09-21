@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-interface TopNavBarProps {}
+interface TopNavBarProps { }
 
 const TopNavBar: React.FC<TopNavBarProps> = () => {
   const toggleTheme = () => {
@@ -24,10 +24,7 @@ const TopNavBar: React.FC<TopNavBarProps> = () => {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <div className="hidden lg:flex items-center gap-4 text-label-code-sm font-label-code-sm pr-2 border-r border-outline-variant">
-          <span className="text-primary font-semibold border-b-2 border-primary pb-0.5">Workspace: Prod-SecOps</span>
-          <span className="text-on-surface-variant hover:text-on-surface cursor-pointer">Rule Engine v4.2</span>
-        </div>
+
         <a className="hidden sm:flex items-center gap-1 text-label-code-sm font-label-code-sm text-on-surface-variant hover:text-on-surface px-2 py-1 rounded hover:bg-surface-container-high transition-colors" href="#">
           <span className="material-symbols-outlined text-sm">help</span>
           <span>Docs</span>
@@ -35,7 +32,6 @@ const TopNavBar: React.FC<TopNavBarProps> = () => {
         <div className="flex items-center gap-1">
           <button className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors relative" title="Notifications">
             <span className="material-symbols-outlined text-base">notifications</span>
-            <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-primary"></span>
           </button>
           <button className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" onClick={toggleTheme} title="Toggle Theme">
             <span className="material-symbols-outlined text-base">contrast</span>

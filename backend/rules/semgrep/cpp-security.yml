@@ -1,0 +1,40 @@
+rules:
+  - id: cpp-buffer-overflow
+    languages: [cpp]
+    patterns:
+      - pattern-either:
+          - pattern: strcpy(...)
+          - pattern: strcat(...)
+          - pattern: sprintf(...)
+          - pattern: gets(...)
+    message: "Potential buffer overflow due to unsafe function usage."
+    severity: ERROR
+    metadata:
+      category: buffer-overflow
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Use safer alternatives like strncpy, strncat, snprintf, or C++ std::string."
+
+  - id: cpp-format-string
+    languages: [cpp]
+    patterns:
+      - pattern: printf($STR)
+    message: "Format string vulnerability if string is user-controlled."
+    severity: WARNING
+    metadata:
+      category: format-string
+      impact: HIGH
+      confidence: LOW
+      recommendation: "Use format strings explicitly or use std::cout."
+
+  - id: cpp-command-injection
+    languages: [cpp]
+    patterns:
+      - pattern: system(...)
+    message: "Using system() can lead to command injection."
+    severity: ERROR
+    metadata:
+      category: command-injection
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Avoid using system(), use secure IPC or execution APIs."

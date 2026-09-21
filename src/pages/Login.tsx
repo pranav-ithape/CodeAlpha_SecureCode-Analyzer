@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [emailStatus, setEmailStatus] = useState('LDAP / SSO enabled');
   const [emailError, setEmailError] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
   const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,28 +31,15 @@ const Login: React.FC = () => {
       return;
     }
     
-    setIsAuthenticating(true);
-    setTimeout(() => {
-      setIsAuthenticating(false);
-      navigate('/');
-    }, 1400);
+    // Auth backend not yet integrated
+    navigate('/');
   };
 
   return (
     <div className="bg-background text-on-surface antialiased min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-on-primary-container relative">
       {/* Floating Utility Header */}
-      <header className="absolute top-0 left-0 right-0 z-40 px-space-lg py-4 flex justify-between items-center pointer-events-none">
-        <div className="pointer-events-auto flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high border border-outline-variant text-[11px] font-label-code-sm text-secondary">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
-            GATEWAY: SEC-AUTH-US-EAST-1
-          </span>
-        </div>
+      <header className="absolute top-0 left-0 right-0 z-40 px-space-lg py-4 flex justify-end items-center pointer-events-none">
         <div className="pointer-events-auto flex items-center gap-3">
-          <a className="font-label-code-sm text-label-code-sm text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1" href="#">
-            <span className="material-symbols-outlined text-[16px]">help</span>
-            SecOps Helpdesk
-          </a>
           <button 
             aria-label="Toggle Theme" 
             className="p-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors"
@@ -109,18 +96,9 @@ const Login: React.FC = () => {
             <div className="flex items-center gap-6 text-on-surface-variant font-label-code-sm text-xs">
               <span className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-secondary">lock</span>
-                256-bit AES-GCM Encrypted
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[16px] text-secondary">gavel</span>
-                SOC2 Type II Certified
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[16px] text-secondary">shield</span>
-                ISO 27001
+                Encrypted Transit
               </span>
             </div>
-            <span className="font-label-code-sm text-[11px] text-outline">Cluster US-04</span>
           </div>
         </section>
 
@@ -133,10 +111,6 @@ const Login: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px]">security</span>
                 </div>
                 <span className="font-headline-sm text-headline-sm font-bold text-on-surface">SecureCode Analyzer</span>
-              </div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-surface-container border border-outline-variant text-primary font-label-code-sm text-xs mb-3">
-                <span className="material-symbols-outlined text-[14px]">shield_person</span>
-                SecOps IAM Authentication
               </div>
               <h2 className="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
                 Welcome back
@@ -218,19 +192,11 @@ const Login: React.FC = () => {
               <button
                 className="w-full h-10 rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm font-semibold hover:bg-opacity-90 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 type="submit"
-                disabled={isAuthenticating}
               >
-                {isAuthenticating ? (
-                  <>
-                    <span className="material-symbols-outlined text-[18px] animate-spin">sync</span>
-                    <span>Authenticating SecOps Token...</span>
-                  </>
-                ) : (
                   <>
                     <span className="material-symbols-outlined text-[18px]">lock</span>
                     <span>Sign In to Workspace</span>
                   </>
-                )}
               </button>
             </form>
 

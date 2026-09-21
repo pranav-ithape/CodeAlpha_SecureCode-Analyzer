@@ -1,0 +1,58 @@
+rules:
+  - id: php-sql-injection
+    languages: [php]
+    patterns:
+      - pattern-either:
+          - pattern: mysql_query(...)
+          - pattern: "mysqli_query($CONN, ... . $VAR . ...)"
+    message: "Potential SQL injection."
+    severity: ERROR
+    metadata:
+      category: sql-injection
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Use PDO or prepared statements."
+
+  - id: php-command-injection
+    languages: [php]
+    patterns:
+      - pattern-either:
+          - pattern: exec(...)
+          - pattern: shell_exec(...)
+          - pattern: system(...)
+          - pattern: passthru(...)
+    message: "Dangerous execution function detected."
+    severity: ERROR
+    metadata:
+      category: command-injection
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Sanitize inputs with escapeshellarg() or avoid shell execution."
+
+  - id: php-xss
+    languages: [php]
+    patterns:
+      - pattern-either:
+          - pattern: "echo $_GET[...]"
+          - pattern: "echo $_POST[...]"
+    message: "Direct output of user input may lead to XSS."
+    severity: WARNING
+    metadata:
+      category: xss
+      impact: MEDIUM
+      confidence: HIGH
+      recommendation: "Use htmlspecialchars() to encode output."
+
+  - id: php-file-inclusion
+    languages: [php]
+    patterns:
+      - pattern-either:
+          - pattern: include(...)
+          - pattern: require(...)
+    message: "Dynamic file inclusion can lead to LFI/RFI."
+    severity: ERROR
+    metadata:
+      category: file-inclusion
+      impact: HIGH
+      confidence: LOW
+      recommendation: "Avoid user input in include/require paths."

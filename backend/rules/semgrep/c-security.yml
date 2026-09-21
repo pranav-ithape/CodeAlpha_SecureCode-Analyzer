@@ -1,0 +1,40 @@
+rules:
+  - id: c-buffer-overflow
+    languages: [c]
+    patterns:
+      - pattern-either:
+          - pattern: strcpy(...)
+          - pattern: strcat(...)
+          - pattern: sprintf(...)
+          - pattern: gets(...)
+    message: "Potential buffer overflow due to unsafe function usage."
+    severity: ERROR
+    metadata:
+      category: buffer-overflow
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Use safer alternatives like strncpy, strncat, snprintf, or fgets."
+
+  - id: c-format-string
+    languages: [c]
+    patterns:
+      - pattern: printf($STR)
+    message: "Format string vulnerability if string is user-controlled."
+    severity: WARNING
+    metadata:
+      category: format-string
+      impact: HIGH
+      confidence: LOW
+      recommendation: "Use format strings explicitly (e.g., printf(\"%s\", str))."
+
+  - id: c-command-injection
+    languages: [c]
+    patterns:
+      - pattern: system(...)
+    message: "Using system() can lead to command injection."
+    severity: ERROR
+    metadata:
+      category: command-injection
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Use exec family of functions (e.g., execve) instead of system()."

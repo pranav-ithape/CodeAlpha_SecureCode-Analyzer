@@ -22,72 +22,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Zero-State Summary Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Metric 1 */}
-        <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-label-code-sm font-label-code-sm text-outline">Scans Completed</span>
-            <span className="material-symbols-outlined text-outline text-lg">check_circle</span>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-headline-lg text-on-surface">0</span>
-            <span className="text-xs text-outline font-label-code-sm">total runs</span>
-          </div>
-          <div className="mt-2 text-xs text-outline border-t border-outline-variant pt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-xs">info</span>
-            <span>Awaiting initial repository scan</span>
-          </div>
-        </div>
 
-        {/* Metric 2 */}
-        <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-label-code-sm font-label-code-sm text-outline">Open Vulnerabilities</span>
-            <span className="material-symbols-outlined text-outline text-lg">bug_report</span>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-headline-lg text-on-surface">0</span>
-            <span className="text-xs text-secondary font-label-code-sm font-semibold">Clean Baseline</span>
-          </div>
-          <div className="mt-2 text-xs text-outline border-t border-outline-variant pt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-xs">verified</span>
-            <span>Zero pending findings</span>
-          </div>
-        </div>
-
-        {/* Metric 3 */}
-        <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-label-code-sm font-label-code-sm text-outline">Critical Issues</span>
-            <span className="material-symbols-outlined text-error text-lg">gpp_bad</span>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-headline-lg text-error">0</span>
-            <span className="text-xs text-outline font-label-code-sm">CVSS 9.0-10.0</span>
-          </div>
-          <div className="mt-2 text-xs text-outline border-t border-outline-variant pt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-xs text-secondary">lock_open</span>
-            <span>No high-priority blockers</span>
-          </div>
-        </div>
-
-        {/* Metric 4 */}
-        <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-label-code-sm font-label-code-sm text-outline">Avg Remediation Time</span>
-            <span className="material-symbols-outlined text-outline text-lg">timer</span>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-headline-lg text-on-surface">--</span>
-            <span className="text-xs text-outline font-label-code-sm">hours</span>
-          </div>
-          <div className="mt-2 text-xs text-outline border-t border-outline-variant pt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-xs">query_builder</span>
-            <span>Calculated post first remediation</span>
-          </div>
-        </div>
-      </div>
 
       {/* Enterprise Clean Empty State Card */}
       <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-8 md:p-12 text-center flex flex-col items-center justify-center max-w-4xl mx-auto shadow-sm mt-8">

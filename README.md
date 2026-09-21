@@ -18,9 +18,13 @@
 * **Reports** — Document and export security findings.
 * **Responsive UI** — Designed for desktop, tablet, and mobile devices.
 
+## SecureCode Analyzer
+
+Phase 3 implementation with real multi-language static analysis using Bandit (Python) and Semgrep (JavaScript, TypeScript).
+
 ## Security Analysis
 
-The platform is designed to use static analysis techniques and security rules to identify vulnerabilities such as:
+The platform uses static analysis tools and security rules to identify vulnerabilities such as:
 
 * SQL Injection
 * Command Injection

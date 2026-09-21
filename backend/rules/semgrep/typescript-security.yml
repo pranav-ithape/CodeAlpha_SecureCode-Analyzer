@@ -1,0 +1,58 @@
+rules:
+  - id: typescript-eval
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: eval(...)
+    message: "Dynamic code execution can allow attacker-controlled input to execute unintended code."
+    severity: ERROR
+    metadata:
+      category: code-injection
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Avoid eval() and use safer alternatives."
+  - id: typescript-child-process-exec
+    languages: [javascript, typescript]
+    patterns:
+      - pattern-either:
+          - pattern: child_process.exec(...)
+          - pattern: $X.exec(...)
+    message: "Using exec() is dangerous if input is not sanitized, leading to command injection."
+    severity: ERROR
+    metadata:
+      category: command-injection
+      impact: HIGH
+      confidence: HIGH
+      recommendation: "Use execFile or spawn with carefully controlled arguments."
+  - id: typescript-innerhtml
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: $X.innerHTML = $Y
+    message: "Assigning to innerHTML can lead to Cross-Site Scripting (XSS) if input is not sanitized."
+    severity: WARNING
+    metadata:
+      category: xss
+      impact: MEDIUM
+      confidence: HIGH
+      recommendation: "Use textContent or a sanitizer library like DOMPurify."
+  - id: typescript-hardcoded-secret
+    languages: [javascript, typescript]
+    patterns:
+      - pattern-regex: "(?i)(password|secret|token|api_key)\\s*=\\s*['\"][a-zA-Z0-9_-]+['\"]"
+    message: "Hardcoded secret detected. This can lead to sensitive information exposure."
+    severity: WARNING
+    metadata:
+      category: hardcoded-secret
+      impact: HIGH
+      confidence: MEDIUM
+      recommendation: "Use environment variables or a secret manager."
+  - id: typescript-weak-randomness
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: Math.random()
+    message: "Math.random() is not cryptographically secure."
+    severity: INFO
+    metadata:
+      category: insecure-randomness
+      impact: LOW
+      confidence: HIGH
+      recommendation: "Use crypto.getRandomValues() or the crypto module in Node.js."

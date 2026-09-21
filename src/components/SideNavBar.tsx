@@ -31,9 +31,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
             <div className="truncate">
               <div className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight truncate leading-tight">SecureCode</div>
               <div className="font-label-code-sm text-label-code-sm text-outline flex items-center gap-1.5">
-                <span className="text-secondary font-medium">v4.2</span>
-                <span>•</span>
-                <span className="truncate">SecOps</span>
+                <span className="text-secondary font-medium">SAST Platform</span>
               </div>
             </div>
           </div>
@@ -107,7 +105,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
               SC
             </div>
             <div className="truncate">
-              <div className="font-headline-sm text-body-sm font-semibold text-on-surface truncate">SecOps Lead</div>
+              <div className="font-headline-sm text-body-sm font-semibold text-on-surface truncate">User Account</div>
               <div className="font-label-code-sm text-[10px] text-outline truncate">alex@acme.corp</div>
             </div>
           </div>
