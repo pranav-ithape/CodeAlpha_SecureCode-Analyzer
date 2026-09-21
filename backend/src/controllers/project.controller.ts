@@ -14,7 +14,8 @@ export const createProject = async (req: Request, res: Response): Promise<void> 
 
     const project = new Project({
       name: name.trim(),
-      description: description?.trim()
+      description: description?.trim(),
+      userId: (req as any).user.id
     });
 
     await project.save();
@@ -26,7 +27,10 @@ export const createProject = async (req: Request, res: Response): Promise<void> 
 
 export const getProjects = async (req: Request, res: Response): Promise<void> => {
   try {
-    const projects = await Project.find().sort({ createdAt: -1 });
+    const userId = (req as any).user.id;
+    const projects = await Project.find({
+      $or: [{ userId }, { userId: { $exists: false } }]
+    }).sort({ createdAt: -1 });
     res.status(200).json(projects);
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch projects', details: error.message });
@@ -35,9 +39,13 @@ export const getProjects = async (req: Request, res: Response): Promise<void> =>
 
 export const getProjectById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const project = await Project.findById(req.params.projectId);
+    const userId = (req as any).user.id;
+    const project = await Project.findOne({
+      _id: req.params.projectId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
     if (!project) {
-      res.status(404).json({ error: 'Project not found' });
+      res.status(404).json({ error: 'Project not found or unauthorized' });
       return;
     }
     res.status(200).json(project);
@@ -53,10 +61,14 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
 export const deleteProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const projectId = req.params.projectId;
-    const project = await Project.findById(projectId);
+    const userId = (req as any).user.id;
+    const project = await Project.findOne({
+      _id: projectId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
     
     if (!project) {
-      res.status(404).json({ error: 'Project not found' });
+      res.status(404).json({ error: 'Project not found or unauthorized' });
       return;
     }
 
@@ -81,6 +93,19 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
 export const getProjectScans = async (req: Request, res: Response): Promise<void> => {
   try {
     const projectId = req.params.projectId;
+    const userId = (req as any).user.id;
+    
+    // Verify project access first
+    const project = await Project.findOne({
+      _id: projectId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
+    
+    if (!project) {
+      res.status(404).json({ error: 'Project not found or unauthorized' });
+      return;
+    }
+
     const scans = await Scan.find({ projectId }).sort({ createdAt: -1 });
     res.status(200).json(scans);
   } catch (error: any) {

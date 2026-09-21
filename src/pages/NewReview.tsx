@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../utils/apiFetch';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_EXTENSIONS = ['.py', '.js', '.ts', '.java', '.c', '.cpp', '.php'];
@@ -47,8 +48,7 @@ const NewReview: React.FC = () => {
     setAnalysisError(null);
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-      const response = await fetch(`${baseUrl}/api/scans`, {
+      const response = await apiFetch('/api/scans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

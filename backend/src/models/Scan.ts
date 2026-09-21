@@ -11,6 +11,7 @@ export interface IScanSummary {
 
 export interface IScan extends Document {
   projectId?: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
   applicationName: string;
   language: string;
   status: 'pending' | 'analyzing' | 'completed' | 'failed';
@@ -26,6 +27,10 @@ const ScanSchema = new Schema<IScan>({
     type: Schema.Types.ObjectId,
     ref: 'Project',
     required: false
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   applicationName: {
     type: String,

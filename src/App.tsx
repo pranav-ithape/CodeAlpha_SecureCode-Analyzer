@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Layouts
 import MainLayout from './layouts/MainLayout';
@@ -17,25 +19,27 @@ import SignUp from './pages/SignUp';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="new-review" element={<NewReview />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="history" element={<ScanHistory />} />
-          <Route path="vulnerabilities" element={<Vulnerabilities />} />
-          <Route path="recommendations" element={<Recommendations />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          
+          <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+            <Route index element={<Dashboard />} />
+            <Route path="new-review" element={<NewReview />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="history" element={<ScanHistory />} />
+            <Route path="vulnerabilities" element={<Vulnerabilities />} />
+            <Route path="recommendations" element={<Recommendations />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

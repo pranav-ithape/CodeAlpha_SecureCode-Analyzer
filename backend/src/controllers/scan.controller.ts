@@ -16,8 +16,10 @@ export const submitScan = async (req: Request, res: Response): Promise<void> => 
   }
 
   // 2. Create Scan Record (status: analyzing)
+  const userId = (req as any).user?.id;
   const scan = new Scan({
     projectId: projectId || undefined,
+    userId,
     applicationName,
     language,
     status: 'analyzing',
@@ -99,7 +101,10 @@ export const submitScan = async (req: Request, res: Response): Promise<void> => 
 
 export const getScans = async (req: Request, res: Response): Promise<void> => {
   try {
-    const scans = await Scan.find().sort({ createdAt: -1 }).limit(100);
+    const userId = (req as any).user.id;
+    const scans = await Scan.find({
+      $or: [{ userId }, { userId: { $exists: false } }]
+    }).sort({ createdAt: -1 }).limit(100);
     res.status(200).json(scans);
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch scans', details: error.message });
@@ -108,9 +113,13 @@ export const getScans = async (req: Request, res: Response): Promise<void> => {
 
 export const getScanById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const scan = await Scan.findById(req.params.scanId);
+    const userId = (req as any).user.id;
+    const scan = await Scan.findOne({
+      _id: req.params.scanId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
     if (!scan) {
-      res.status(404).json({ error: 'Scan not found' });
+      res.status(404).json({ error: 'Scan not found or unauthorized' });
       return;
     }
     res.status(200).json(scan);
@@ -125,9 +134,22 @@ export const getScanById = async (req: Request, res: Response): Promise<void> =>
 
 export const getScanFindings = async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = (req as any).user.id;
+    const scanId = req.params.scanId;
+
+    // Verify scan ownership or legacy status before returning findings
+    const scan = await Scan.findOne({
+      _id: scanId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
+    if (!scan) {
+      res.status(404).json({ error: 'Scan not found or unauthorized' });
+      return;
+    }
+
     const { severity, status } = req.query;
     
-    const query: any = { scanId: req.params.scanId };
+    const query: any = { scanId };
     if (severity) query.severity = severity;
     if (status) query.status = status;
 
@@ -145,10 +167,14 @@ export const getScanFindings = async (req: Request, res: Response): Promise<void
 export const deleteScan = async (req: Request, res: Response): Promise<void> => {
   try {
     const scanId = req.params.scanId;
-    const scan = await Scan.findById(scanId);
+    const userId = (req as any).user.id;
+    const scan = await Scan.findOne({
+      _id: scanId,
+      $or: [{ userId }, { userId: { $exists: false } }]
+    });
     
     if (!scan) {
-      res.status(404).json({ error: 'Scan not found' });
+      res.status(404).json({ error: 'Scan not found or unauthorized' });
       return;
     }
 

@@ -1,38 +1,66 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { apiFetch } from '../utils/apiFetch';
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailStatus, setEmailStatus] = useState('LDAP / SSO enabled');
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+  
+  const from = location.state?.from?.pathname || '/';
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setEmail(val);
     if (val.includes('@') && val.includes('.')) {
       setEmailStatus('Organization domain verified');
-      setEmailError(false);
+      setEmailError('');
     } else if (val.length > 3) {
       setEmailStatus('Checking directory...');
     } else {
       setEmailStatus('LDAP / SSO enabled');
-      setEmailError(false);
+      setEmailError('');
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.includes('@') || !email.includes('.')) {
-      setEmailError(true);
+      setEmailError('Please enter a valid organization email address.');
       return;
     }
     
-    // Auth backend not yet integrated
-    navigate('/');
+    setLoading(true);
+    setEmailError('');
+
+    try {
+      const response = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setEmailError(data.error || 'Login failed');
+      } else {
+        login(data.token, data.user);
+        navigate(from, { replace: true });
+      }
+    } catch (err) {
+      setEmailError('Network error. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -149,7 +177,7 @@ const Login: React.FC = () => {
                 {emailError && (
                   <p className="mt-1 font-body-sm text-body-sm text-error flex items-center gap-1">
                     <span className="material-symbols-outlined text-[14px]">error</span>
-                    Please enter a valid organization email address.
+                    {emailError}
                   </p>
                 )}
               </div>
@@ -190,13 +218,18 @@ const Login: React.FC = () => {
               </div>
 
               <button
-                className="w-full h-10 rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm font-semibold hover:bg-opacity-90 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className={`w-full h-10 rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm font-semibold hover:bg-opacity-90 active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 type="submit"
+                disabled={loading}
               >
-                  <>
-                    <span className="material-symbols-outlined text-[18px]">lock</span>
-                    <span>Sign In to Workspace</span>
-                  </>
+                  {loading ? (
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-on-primary-container border-t-transparent"></span>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-[18px]">lock</span>
+                      <span>Sign In to Workspace</span>
+                    </>
+                  )}
               </button>
             </form>
 

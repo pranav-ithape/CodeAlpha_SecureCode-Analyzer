@@ -1,5 +1,6 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SideNavBarProps {
   isOpen: boolean;
@@ -7,6 +8,15 @@ interface SideNavBarProps {
 }
 
 const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const navItems = [
     { name: 'Dashboard', path: '/', icon: 'dashboard' },
     { name: 'New Review', path: '/new-review', icon: 'security', badge: 'NEW' },
@@ -99,17 +109,34 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
           </span>
         </div>
         
-        <div className="flex items-center justify-between p-2 rounded-lg bg-surface-container border border-outline-variant">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-7 h-7 rounded bg-surface-container-highest flex items-center justify-center font-label-code-sm text-primary font-bold">
-              SC
+        <div className="relative">
+          <div 
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex items-center justify-between p-2 rounded-lg bg-surface-container border border-outline-variant cursor-pointer hover:bg-surface-container-high transition-colors"
+          >
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-7 h-7 rounded bg-surface-container-highest flex items-center justify-center font-label-code-sm text-primary font-bold">
+                {user?.name.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <div className="truncate">
+                <div className="font-headline-sm text-body-sm font-semibold text-on-surface truncate">{user?.name || 'User Account'}</div>
+                <div className="font-label-code-sm text-[10px] text-outline truncate">{user?.email || 'user@example.com'}</div>
+              </div>
             </div>
-            <div className="truncate">
-              <div className="font-headline-sm text-body-sm font-semibold text-on-surface truncate">User Account</div>
-              <div className="font-label-code-sm text-[10px] text-outline truncate">alex@acme.corp</div>
-            </div>
+            <span className="material-symbols-outlined text-sm text-outline">more_vert</span>
           </div>
-          <span className="material-symbols-outlined text-sm text-outline">more_vert</span>
+
+          {showDropdown && (
+            <div className="absolute bottom-full left-0 mb-2 w-full rounded-lg bg-surface-container-high border border-outline-variant shadow-lg z-50">
+              <button 
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 text-sm text-error hover:bg-surface-container-highest rounded-lg transition-colors flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-base">logout</span>
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </aside>

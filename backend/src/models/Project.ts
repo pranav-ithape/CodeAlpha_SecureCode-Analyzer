@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IProject extends Document {
   name: string;
   description?: string;
+  userId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,6 +19,10 @@ const ProjectSchema = new Schema<IProject>({
     type: String,
     trim: true,
     maxlength: 500
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, { timestamps: true });
 
