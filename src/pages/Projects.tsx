@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/apiFetch';
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -40,16 +42,34 @@ const Projects: React.FC = () => {
       ) : projects.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((project) => (
-            <div key={project._id} className="p-4 rounded-xl bg-surface-container border border-outline-variant hover:border-outline cursor-pointer transition-colors">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="material-symbols-outlined text-primary">folder</span>
-                <h3 className="font-bold text-on-surface truncate">{project.name}</h3>
+            <div 
+              key={project._id} 
+              className="p-4 rounded-xl bg-surface-container border border-outline-variant hover:border-outline hover:shadow-md cursor-pointer transition-all group flex flex-col justify-between"
+              onClick={() => navigate('/history')}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary">folder</span>
+                    <h3 className="font-bold text-on-surface truncate">{project.name}</h3>
+                  </div>
+                  <button 
+                    className="p-1 rounded hover:bg-surface-container-highest text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100"
+                    onClick={(e) => { e.stopPropagation(); navigate('/new-review', { state: { projectName: project.name } }); }}
+                    title="Start New Review"
+                  >
+                    <span className="material-symbols-outlined text-sm">play_arrow</span>
+                  </button>
+                </div>
+                {project.description && (
+                  <p className="text-sm text-on-surface-variant line-clamp-2">{project.description}</p>
+                )}
               </div>
-              {project.description && (
-                <p className="text-sm text-on-surface-variant line-clamp-2">{project.description}</p>
-              )}
-              <div className="mt-4 pt-4 border-t border-outline-variant text-xs text-outline flex justify-between">
+              <div className="mt-4 pt-4 border-t border-outline-variant text-xs text-outline flex items-center justify-between">
                 <span>Created {new Date(project.createdAt).toLocaleDateString()}</span>
+                <span className="text-primary font-medium flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  View History <span className="material-symbols-outlined text-[10px]">arrow_forward</span>
+                </span>
               </div>
             </div>
           ))}

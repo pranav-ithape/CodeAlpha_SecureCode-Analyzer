@@ -22,7 +22,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
     { name: 'New Review', path: '/new-review', icon: 'security', badge: 'NEW' },
     { name: 'Projects', path: '/projects', icon: 'folder_special' },
     { name: 'Scan History', path: '/history', icon: 'history' },
-    { name: 'Vulnerabilities', path: '/vulnerabilities', icon: 'bug_report', count: '0' },
+    { name: 'Vulnerabilities', path: '/vulnerabilities', icon: 'bug_report' },
     { name: 'Recommendations', path: '/recommendations', icon: 'verified_user' },
     { name: 'Reports', path: '/reports', icon: 'assessment' },
     { name: 'Settings', path: '/settings', icon: 'settings' },
@@ -50,14 +50,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
           </button>
         </div>
         
-        <div className="px-space-sm py-1.5 rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-between text-on-surface-variant cursor-pointer hover:border-outline transition-colors">
-          <div className="flex items-center gap-2 truncate">
-            <span className="material-symbols-outlined text-xs text-primary">domain</span>
-            <span className="text-label-code-sm font-label-code-sm truncate">Acme / Prod-SecOps</span>
-          </div>
-          <span className="material-symbols-outlined text-xs">unfold_more</span>
-        </div>
-        
+
         <div className="px-space-xs">
           <NavLink to="/new-review" className="w-full h-9 px-3 rounded-lg bg-primary-container hover:bg-primary text-on-primary-container font-headline-sm text-label-code-sm font-semibold flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.99] shadow-sm">
             <span className="material-symbols-outlined text-base">add_moderator</span>
@@ -98,17 +91,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
           <span className="material-symbols-outlined text-base">menu_book</span>
           <span>Documentation</span>
         </a>
-        <div className="flex items-center justify-between px-3 py-1.5 rounded font-label-code-sm text-label-code-sm text-on-surface-variant bg-surface-container-low">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-base text-secondary">terminal</span>
-            <span>API Status</span>
-          </div>
-          <span className="flex items-center gap-1 text-[11px] text-secondary font-medium">
-            <span className="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
-            <span>99.98%</span>
-          </span>
-        </div>
-        
+
         <div className="relative">
           <div 
             onClick={() => setShowDropdown(!showDropdown)}
