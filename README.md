@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
@@ -30,3 +31,6 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+=======
+# CodeAlpha_SecureCode-Analyzer
+>>>>>>> ac325859a20523c1d7d0faf85c4295c479ac6b07
