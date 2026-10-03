@@ -120,7 +120,17 @@ const Recommendations: React.FC = () => {
                 <h4 className="text-sm font-bold text-on-surface mb-1 flex items-center gap-2">
                   <span className="material-symbols-outlined text-sm text-green-500">lightbulb</span> Remediation
                 </h4>
-                <p className="text-sm text-on-surface-variant">{finding.recommendation}</p>
+                <p className="text-sm text-on-surface-variant mb-3">{finding.recommendation}</p>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/secure-coding-guide?search=${finding.cwe}`);
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                >
+                  <span className="material-symbols-outlined text-[14px]">menu_book</span>
+                  Learn Secure Coding Practice
+                </button>
               </div>
             </div>
           ))}

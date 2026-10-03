@@ -159,7 +159,14 @@ const FindingDetails: React.FC = () => {
               </div>
               <div className="border-t border-outline-variant pt-4">
                 <h3 className="text-sm font-bold text-on-surface mb-1">Recommendation</h3>
-                <p className="text-sm text-on-surface-variant">{finding.recommendation}</p>
+                <p className="text-sm text-on-surface-variant mb-4">{finding.recommendation}</p>
+                <Link 
+                  to={`/secure-coding-guide?search=${finding.cwe}`} 
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                >
+                  <span className="material-symbols-outlined text-[14px]">menu_book</span>
+                  Learn Secure Coding Practice
+                </Link>
               </div>
             </div>
           </div>

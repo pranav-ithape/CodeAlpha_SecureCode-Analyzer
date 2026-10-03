@@ -19,6 +19,7 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import SecurityRules from './pages/SecurityRules';
+import SecureCodingGuide from './pages/SecureCodingGuide';
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
             <Route path="recommendations" element={<Recommendations />} />
             <Route path="reports" element={<Reports />} />
             <Route path="security-rules" element={<SecurityRules />} />
-            <Route path="secure-coding-guide" element={<div className="p-8">Secure Coding Guide Page</div>} />
+            <Route path="secure-coding-guide" element={<SecureCodingGuide />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
