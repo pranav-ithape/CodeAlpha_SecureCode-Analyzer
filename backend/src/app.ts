@@ -12,9 +12,16 @@ app.use(cors());
 // 10MB limit for JSON parsing (to accept large code payloads)
 app.use(express.json({ limit: '10mb' }));
 
+import dashboardRoutes from './routes/dashboard.routes';
+import findingRoutes from './routes/finding.routes';
+import ruleRoutes from './routes/rule.routes';
+
 app.use('/api/auth', authRoutes);
 app.use('/api/scans', authenticate, scanRoutes);
 app.use('/api/projects', authenticate, projectRoutes);
+app.use('/api/dashboard', authenticate, dashboardRoutes);
+app.use('/api/findings', authenticate, findingRoutes);
+app.use('/api/rules', authenticate, ruleRoutes);
 
 // Basic health check
 app.get('/api/health', (req, res) => {

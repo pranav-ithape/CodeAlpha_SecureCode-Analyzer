@@ -12,6 +12,13 @@ export interface IFinding extends Document {
   impact: string;
   recommendation: string;
   status: string;
+  ruleId?: string;
+  cwe?: string;
+  owasp?: string;
+  snippet?: string;
+  reviewerComment?: string;
+  reviewerName?: string;
+  reviewTimestamp?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,7 +39,14 @@ const FindingSchema = new Schema<IFinding>({
   description: { type: String, required: true },
   impact: { type: String, required: true },
   recommendation: { type: String, required: true },
-  status: { type: String, required: true, default: 'OPEN', index: true }
+  status: { type: String, required: true, default: 'OPEN', index: true },
+  ruleId: { type: String },
+  cwe: { type: String },
+  owasp: { type: String },
+  snippet: { type: String },
+  reviewerComment: { type: String },
+  reviewerName: { type: String },
+  reviewTimestamp: { type: Date }
 }, { timestamps: true });
 
 export const Finding = mongoose.model<IFinding>('Finding', FindingSchema);

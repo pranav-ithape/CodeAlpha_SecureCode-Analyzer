@@ -11,6 +11,10 @@ export interface Finding {
   impact: string;
   recommendation: string;
   status: 'OPEN';
+  ruleId?: string;
+  cwe?: string;
+  owasp?: string;
+  snippet?: string;
 }
 
 export interface ScanSummary {

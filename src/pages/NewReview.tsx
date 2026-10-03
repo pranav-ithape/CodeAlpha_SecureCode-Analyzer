@@ -54,7 +54,7 @@ const NewReview: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          applicationName: appName || 'Unnamed Application',
+          project_name: appName || 'Unnamed Project',
           language,
           sourceCode: code
         })
@@ -63,11 +63,11 @@ const NewReview: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze code');
+        throw new Error(data.error || data.details || 'Failed to analyze code');
       }
 
-      // Navigate to vulnerabilities with data
-      navigate('/vulnerabilities', { state: { scanResult: data } });
+      // Navigate to scan results page
+      navigate(`/scans/${data.scanId}`);
 
     } catch (err: any) {
       setAnalysisError(err.message || 'An unexpected error occurred during analysis.');
@@ -384,15 +384,18 @@ const NewReview: React.FC = () => {
               </div>
               <div>
                 <h3 className="font-headline-sm text-headline-sm font-bold text-on-surface">
-                  {isAnalyzing ? 'Executing SAST Engine' : analysisError ? 'Analysis Failed' : 'Analysis Complete'}
+                  {isAnalyzing ? 'Running Security Analysis' : analysisError ? 'Security scan failed.' : 'Completed'}
                 </h3>
                 <p className={`text-xs font-label-code-sm ${analysisError ? 'text-error' : 'text-outline'}`}>
-                  {isAnalyzing ? 'Analyzing source code against Bandit rules...' : analysisError ? 'Error encountered during execution' : 'Processing finished'}
+                  {isAnalyzing ? 'Processing Findings...' : analysisError ? 'Error encountered during execution' : 'Processing finished'}
                 </p>
               </div>
             </div>
-            {!isAnalyzing && (
-              <button className="px-3 py-1.5 rounded border border-outline-variant text-label-code-sm text-outline hover:text-error transition-colors" onClick={handleReset}>Start Over</button>
+            {!isAnalyzing && analysisError && (
+              <button className="px-3 py-1.5 rounded border border-error text-label-code-sm text-error hover:bg-error/10 transition-colors" onClick={startAnalysis}>Retry</button>
+            )}
+            {!isAnalyzing && !analysisError && (
+              <button className="px-3 py-1.5 rounded border border-outline-variant text-label-code-sm text-outline hover:text-primary transition-colors" onClick={handleReset}>Start Over</button>
             )}
           </div>
 

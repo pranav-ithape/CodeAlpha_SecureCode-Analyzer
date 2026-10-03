@@ -6,10 +6,11 @@ import { Finding } from '../models/Finding';
 import mongoose from 'mongoose';
 
 export const submitScan = async (req: Request, res: Response): Promise<void> => {
-  const { projectId, applicationName, language, sourceCode } = req.body;
+  const { projectId, project_name, applicationName, language, sourceCode } = req.body;
+  const finalAppName = project_name || applicationName || 'Unnamed Project';
 
   // 1. Validate request
-  const validationError = validateScanRequest(applicationName, language, sourceCode);
+  const validationError = validateScanRequest(finalAppName, language, sourceCode);
   if (validationError) {
     res.status(400).json({ error: validationError });
     return;
@@ -20,7 +21,7 @@ export const submitScan = async (req: Request, res: Response): Promise<void> => 
   const scan = new Scan({
     projectId: projectId || undefined,
     userId,
-    applicationName,
+    applicationName: finalAppName,
     language,
     status: 'analyzing',
   });
@@ -53,7 +54,11 @@ export const submitScan = async (req: Request, res: Response): Promise<void> => 
       description: f.description,
       impact: f.impact,
       recommendation: f.recommendation,
-      status: 'OPEN'
+      status: 'OPEN',
+      ruleId: f.ruleId,
+      cwe: f.cwe,
+      owasp: f.owasp,
+      snippet: f.snippet
     }));
 
     // 4. Save findings and update scan using session (Transaction if Replica Set is active, otherwise standard save)

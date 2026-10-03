@@ -17,14 +17,24 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
     navigate('/login');
   };
 
-  const navItems = [
+  interface NavItem {
+    name: string;
+    path: string;
+    icon: string;
+    badge?: string;
+    count?: number;
+  }
+
+  const navItems: NavItem[] = [
     { name: 'Dashboard', path: '/', icon: 'dashboard' },
-    { name: 'New Review', path: '/new-review', icon: 'security', badge: 'NEW' },
+    { name: 'New Scan', path: '/new-scan', icon: 'add_moderator' },
     { name: 'Projects', path: '/projects', icon: 'folder_special' },
-    { name: 'Scan History', path: '/history', icon: 'history' },
-    { name: 'Vulnerabilities', path: '/vulnerabilities', icon: 'bug_report' },
-    { name: 'Recommendations', path: '/recommendations', icon: 'verified_user' },
+    { name: 'Findings', path: '/findings', icon: 'bug_report' },
+    { name: 'Recommendations', path: '/recommendations', icon: 'lightbulb' },
+    { name: 'Scan History', path: '/scan-history', icon: 'history' },
     { name: 'Reports', path: '/reports', icon: 'assessment' },
+    { name: 'Security Rules', path: '/security-rules', icon: 'rule' },
+    { name: 'Secure Coding Guide', path: '/secure-coding-guide', icon: 'menu_book' },
     { name: 'Settings', path: '/settings', icon: 'settings' },
   ];
 
@@ -51,12 +61,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
         </div>
         
 
-        <div className="px-space-xs">
-          <NavLink to="/new-review" className="w-full h-9 px-3 rounded-lg bg-primary-container hover:bg-primary text-on-primary-container font-headline-sm text-label-code-sm font-semibold flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.99] shadow-sm">
-            <span className="material-symbols-outlined text-base">add_moderator</span>
-            <span>Quick Triage</span>
-          </NavLink>
-        </div>
+
         
         <nav className="flex flex-col gap-0.5 mt-1">
           {navItems.map((item) => (

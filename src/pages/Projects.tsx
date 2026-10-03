@@ -23,6 +23,13 @@ const Projects: React.FC = () => {
     fetchProjects();
   }, []);
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredProjects = projects.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center border-b border-outline-variant pb-4">
@@ -35,13 +42,26 @@ const Projects: React.FC = () => {
         </button>
       </div>
       
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="relative w-full max-w-md">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+          <input
+            className="w-full h-10 pl-10 pr-4 text-sm bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors shadow-sm"
+            placeholder="Search projects..."
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+      
       {loading ? (
         <div className="flex justify-center p-12">
           <span className="h-8 w-8 animate-spin rounded-full border-4 border-outline-variant border-t-primary"></span>
         </div>
-      ) : projects.length > 0 ? (
+      ) : filteredProjects.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <div 
               key={project._id} 
               className="p-4 rounded-xl bg-surface-container border border-outline-variant hover:border-outline hover:shadow-md cursor-pointer transition-all group flex flex-col justify-between"

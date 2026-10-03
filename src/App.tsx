@@ -10,12 +10,15 @@ import Dashboard from './pages/Dashboard';
 import NewReview from './pages/NewReview';
 import Projects from './pages/Projects';
 import ScanHistory from './pages/ScanHistory';
+import ScanResults from './pages/ScanResults';
 import Vulnerabilities from './pages/Vulnerabilities';
+import FindingDetails from './pages/FindingDetails';
 import Recommendations from './pages/Recommendations';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import SecurityRules from './pages/SecurityRules';
 
 function App() {
   return (
@@ -27,12 +30,16 @@ function App() {
           
           <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
-            <Route path="new-review" element={<NewReview />} />
+            <Route path="new-scan" element={<NewReview />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="history" element={<ScanHistory />} />
-            <Route path="vulnerabilities" element={<Vulnerabilities />} />
+            <Route path="scan-history" element={<ScanHistory />} />
+            <Route path="scans/:scanId" element={<ScanResults />} />
+            <Route path="findings" element={<Vulnerabilities />} /> 
+            <Route path="findings/:findingId" element={<FindingDetails />} />
             <Route path="recommendations" element={<Recommendations />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="security-rules" element={<SecurityRules />} />
+            <Route path="secure-coding-guide" element={<div className="p-8">Secure Coding Guide Page</div>} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

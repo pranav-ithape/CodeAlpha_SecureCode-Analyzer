@@ -21,6 +21,14 @@ const ScanHistory: React.FC = () => {
     fetchScans();
   }, []);
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredScans = scans.filter(s => 
+    s.applicationName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    s._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.language?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="flex justify-between items-center border-b border-outline-variant pb-4">
@@ -29,12 +37,24 @@ const ScanHistory: React.FC = () => {
           <p className="text-on-surface-variant">Log of all static code analysis runs.</p>
         </div>
       </div>
-      
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="relative w-full max-w-md">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+          <input
+            className="w-full h-10 pl-10 pr-4 text-sm bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors shadow-sm"
+            placeholder="Search scans by application, language, or ID..."
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
       {loading ? (
         <div className="flex justify-center p-12">
           <span className="h-8 w-8 animate-spin rounded-full border-4 border-outline-variant border-t-primary"></span>
         </div>
-      ) : scans.length > 0 ? (
+      ) : filteredScans.length > 0 ? (
         <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-low">
           <table className="w-full text-left text-sm text-on-surface">
             <thead className="bg-surface-container border-b border-outline-variant font-semibold">
@@ -49,7 +69,7 @@ const ScanHistory: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {scans.map((scan) => (
+              {filteredScans.map((scan) => (
                 <tr key={scan._id} className="border-b border-outline-variant last:border-0 hover:bg-surface-container-highest transition-colors">
                   <td className="px-4 py-3 font-mono text-xs text-outline">{scan._id.substring(0, 8)}...</td>
                   <td className="px-4 py-3 font-medium">{scan.applicationName}</td>

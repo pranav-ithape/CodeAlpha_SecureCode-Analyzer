@@ -1,27 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-interface TopNavBarProps { }
+interface TopNavBarProps { 
+  sidebarOpen: boolean;
+  toggleSidebar: () => void;
+}
 
-const TopNavBar: React.FC<TopNavBarProps> = () => {
+const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => {
   const toggleTheme = () => {
     document.documentElement.classList.toggle('dark');
   };
 
+
+
   return (
     <header className="flex justify-between items-center w-full px-space-lg h-14 border-b border-outline-variant bg-surface-container-low z-20 flex-shrink-0">
       <div className="flex items-center gap-space-md flex-1 max-w-xl">
-        <div className="relative w-full">
-          <span className="material-symbols-outlined absolute left-2.5 top-2.5 text-outline text-base">search</span>
-          <input
-            className="w-full h-8 pl-8 pr-12 text-label-code-sm font-label-code-sm bg-surface-container border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-            placeholder="Press / to search rules, files, projects, or findings..."
-            type="text"
-          />
-          <div className="absolute right-2 top-2 px-1.5 py-0.5 rounded bg-surface-container-high border border-outline-variant text-[10px] font-label-code-sm text-outline pointer-events-none">
-            /
-          </div>
-        </div>
+        {!sidebarOpen && (
+          <button 
+            onClick={toggleSidebar}
+            className="p-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors flex-shrink-0 mr-2"
+            title="Open Sidebar"
+          >
+            <span className="material-symbols-outlined text-xl">menu</span>
+          </button>
+        )}
+
       </div>
       <div className="flex items-center gap-3">
 
@@ -37,7 +41,7 @@ const TopNavBar: React.FC<TopNavBarProps> = () => {
             <span className="material-symbols-outlined text-base">contrast</span>
           </button>
         </div>
-        <Link to="/new-review" className="h-8 px-3 rounded-lg bg-primary hover:bg-primary-fixed-dim text-on-primary font-headline-sm text-label-code-sm font-semibold flex items-center gap-1.5 transition-all shadow-sm">
+        <Link to="/new-scan" className="h-8 px-3 rounded-lg bg-primary hover:bg-primary-fixed-dim text-on-primary font-headline-sm text-label-code-sm font-semibold flex items-center gap-1.5 transition-all shadow-sm">
           <span className="material-symbols-outlined text-sm">add</span>
           <span>New Scan</span>
         </Link>
