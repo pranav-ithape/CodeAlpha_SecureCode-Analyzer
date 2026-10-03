@@ -45,8 +45,8 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
       <div className="flex flex-col gap-space-sm">
         <div className="flex items-center justify-between px-space-sm py-space-xs border-b border-outline-variant pb-space-sm">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container flex-shrink-0">
-              <span className="material-symbols-outlined text-primary text-xl">shield</span>
+            <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container flex-shrink-0 overflow-hidden">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <div className="truncate">
               <div className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight truncate leading-tight">SecureCode</div>

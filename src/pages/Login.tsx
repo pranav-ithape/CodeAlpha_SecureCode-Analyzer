@@ -85,8 +85,8 @@ const Login: React.FC = () => {
           
           <div className="relative z-10 pt-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary shadow-inner">
-                <span className="material-symbols-outlined text-[24px]">security</span>
+              <div className="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary shadow-inner overflow-hidden">
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <div>
                 <span className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface block">SecureCode Analyzer</span>
@@ -135,8 +135,8 @@ const Login: React.FC = () => {
           <div className="w-full max-w-md">
             <div className="mb-8">
               <div className="lg:hidden flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-[20px]">security</span>
+                <div className="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary overflow-hidden">
+                  <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <span className="font-headline-sm text-headline-sm font-bold text-on-surface">SecureCode Analyzer</span>
               </div>
