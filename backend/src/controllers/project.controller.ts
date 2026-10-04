@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Project } from '../models/Project';
 import { Scan } from '../models/Scan';
 import { Finding } from '../models/Finding';
+import { logAudit } from '../services/audit.service';
 
 export const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -19,9 +20,18 @@ export const createProject = async (req: Request, res: Response): Promise<void> 
     });
 
     await project.save();
+    
+    await logAudit({
+      userId: (req as any).user.id,
+      action: 'PROJECT_CREATED',
+      resourceType: 'Project',
+      resourceId: project._id.toString(),
+      status: 'SUCCESS'
+    });
+    
     res.status(201).json(project);
   } catch (error: any) {
-    res.status(500).json({ error: 'Failed to create project', details: error.message });
+    res.status(500).json({ error: 'Failed to create project' });
   }
 };
 
@@ -80,13 +90,21 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
     await Scan.deleteMany({ projectId });
     await Project.deleteOne({ _id: projectId });
 
+    await logAudit({
+      userId,
+      action: 'PROJECT_DELETED',
+      resourceType: 'Project',
+      resourceId: projectId as string,
+      status: 'SUCCESS'
+    });
+
     res.status(200).json({ message: 'Project and associated data deleted successfully' });
   } catch (error: any) {
     if (error.name === 'CastError') {
       res.status(400).json({ error: 'Invalid project ID format' });
       return;
     }
-    res.status(500).json({ error: 'Failed to delete project', details: error.message });
+    res.status(500).json({ error: 'Failed to delete project' });
   }
 };
 

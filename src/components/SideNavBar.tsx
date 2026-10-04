@@ -30,6 +30,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
     { name: 'New Scan', path: '/new-scan', icon: 'add_moderator' },
     { name: 'Projects', path: '/projects', icon: 'folder_special' },
     { name: 'Findings', path: '/findings', icon: 'bug_report' },
+    { name: 'Manual Review', path: '/manual-review', icon: 'fact_check' },
     { name: 'Recommendations', path: '/recommendations', icon: 'lightbulb' },
     { name: 'Scan History', path: '/scan-history', icon: 'history' },
     { name: 'Reports', path: '/reports', icon: 'assessment' },

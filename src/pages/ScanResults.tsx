@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/apiFetch';
 
 const ScanResults: React.FC = () => {
@@ -8,6 +8,8 @@ const ScanResults: React.FC = () => {
   const [findings, setFindings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [comparison, setComparison] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchScanData = async () => {
@@ -25,6 +27,13 @@ const ScanResults: React.FC = () => {
         if (resFindings.ok) {
           const findingsData = await resFindings.json();
           setFindings(findingsData);
+        }
+
+        if (scanData.scanType === 'RETEST') {
+          const resComp = await apiFetch(`/api/scans/${scanId}/comparison`);
+          if (resComp.ok) {
+            setComparison(await resComp.json());
+          }
         }
       } catch (err: any) {
         setError(err.message || 'Error loading scan results');
@@ -57,7 +66,7 @@ const ScanResults: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-12">
+    <div className="space-y-6 pb-12">
       <div className="flex justify-between items-end border-b border-outline-variant pb-4">
         <div>
           <Link to="/history" className="text-sm text-outline hover:text-primary flex items-center gap-1 mb-2 transition-colors">
@@ -65,7 +74,7 @@ const ScanResults: React.FC = () => {
             Back to History
           </Link>
           <h1 className="text-headline-lg font-bold text-on-surface flex items-center gap-3">
-            Scan Results
+            {scan.scanType === 'RETEST' ? 'Retest Results' : 'Scan Results'}
             <span className={`text-xs px-2 py-1 rounded font-bold uppercase ${
               scan.status === 'completed' ? 'bg-green-500/20 text-green-500' :
               scan.status === 'failed' ? 'bg-error/20 text-error' :
@@ -73,14 +82,51 @@ const ScanResults: React.FC = () => {
             }`}>
               {scan.status}
             </span>
+            {scan.scanType === 'RETEST' && (
+               <span className="text-xs px-2 py-1 rounded font-bold uppercase bg-primary/20 text-primary">
+                 Retest
+               </span>
+            )}
           </h1>
           <p className="text-on-surface-variant mt-1">Project: {scan.applicationName || 'Unknown'} • Language: {scan.language}</p>
         </div>
-        <div className="text-right">
-          <p className="text-sm text-outline">Scan ID: {scan._id}</p>
-          <p className="text-sm text-outline">Date: {new Date(scan.createdAt).toLocaleString()}</p>
+        <div className="text-right flex flex-col items-end gap-2">
+          <div>
+            <p className="text-sm text-outline">Scan ID: {scan._id}</p>
+            {scan.previousScanId && <p className="text-sm text-outline">Prev Scan: {scan.previousScanId}</p>}
+            <p className="text-sm text-outline">Date: {new Date(scan.createdAt).toLocaleString()}</p>
+          </div>
+          <button 
+            className="px-4 py-2 bg-primary text-on-primary rounded font-semibold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2"
+            onClick={() => navigate('/new-scan', { state: { projectId: scan.projectId, retestScanId: scan._id, applicationName: scan.applicationName, language: scan.language } })}
+          >
+            <span className="material-symbols-outlined text-sm">replay</span> Retest Project
+          </button>
         </div>
       </div>
+
+      {comparison && (
+        <div className="p-5 rounded-xl bg-surface-container-low border border-primary/30 flex flex-col gap-2 mb-6">
+          <h2 className="text-lg font-bold text-on-surface mb-2">Retest Comparison Summary</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-3 bg-surface-container rounded border border-green-500/20 flex flex-col items-center">
+              <span className="text-sm text-green-500 font-bold">Resolved</span>
+              <span className="text-2xl font-bold text-on-surface">{comparison.resolved}</span>
+            </div>
+            <div className="p-3 bg-surface-container rounded border border-orange-500/20 flex flex-col items-center">
+              <span className="text-sm text-orange-500 font-bold">Still Open</span>
+              <span className="text-2xl font-bold text-on-surface">{comparison.stillOpen}</span>
+            </div>
+            <div className="p-3 bg-surface-container rounded border border-error/20 flex flex-col items-center">
+              <span className="text-sm text-error font-bold">New Findings</span>
+              <span className="text-2xl font-bold text-on-surface">{comparison.new}</span>
+            </div>
+          </div>
+          <p className="text-sm text-outline mt-2 text-center">
+            Previous Findings: {comparison.previousFindingsCount} → Current Findings: {comparison.currentFindingsCount}
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant text-center">

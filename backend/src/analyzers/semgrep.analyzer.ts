@@ -32,6 +32,7 @@ const getSemgrepPath = async (): Promise<string> => {
 };
 
 type SemgrepSupportedLanguage = 'javascript' | 'typescript' | 'java' | 'c' | 'cpp' | 'php';
+export const semgrepLanguages: string[] = ['javascript', 'typescript', 'java', 'c', 'cpp', 'php'];
 
 const getLanguageConfig = (language: SemgrepSupportedLanguage): { extension: string, ruleFile: string } => {
   switch (language) {
@@ -45,7 +46,7 @@ const getLanguageConfig = (language: SemgrepSupportedLanguage): { extension: str
   }
 };
 
-export const analyzeSemgrepCode = async (sourceCode: string, language: SemgrepSupportedLanguage): Promise<Finding[]> => {
+export const analyzeSemgrepCode = async (sourceCode: string, language: SemgrepSupportedLanguage, fileName?: string): Promise<Finding[]> => {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'secops-semgrep-'));
   const { extension, ruleFile } = getLanguageConfig(language);
   const tempFilePath = path.join(tempDir, `source${extension}`);
@@ -80,7 +81,7 @@ export const analyzeSemgrepCode = async (sourceCode: string, language: SemgrepSu
             title: res.check_id.split('.').pop() || 'Vulnerability',
             severity: mapSeverity(res.extra?.severity || 'INFO'),
             category: res.extra?.metadata?.category || 'Security',
-            file: `source${extension}`,
+            file: fileName || `source${extension}`,
             line: res.start?.line || 1,
             description: res.extra?.message || 'A security vulnerability was found.',
             impact: res.extra?.metadata?.impact ? `Impact: ${res.extra.metadata.impact}` : 'Confidence: HIGH',

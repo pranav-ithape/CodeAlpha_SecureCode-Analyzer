@@ -1,0 +1,158 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Security Report - SecureCode Test Project</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 2rem; background: #f9f9f9; }
+        .card { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        h1, h2, h3 { color: #111; }
+        .finding { border-left: 4px solid #ddd; padding-left: 1rem; margin-bottom: 2rem; background: #fafafa; padding: 1rem; border-radius: 4px; }
+        .finding.critical { border-left-color: #dc2626; }
+        .finding.high { border-left-color: #f97316; }
+        .finding.medium { border-left-color: #eab308; }
+        .finding.low { border-left-color: #3b82f6; }
+        .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; font-weight: bold; color: white; }
+        .badge.critical { background: #dc2626; }
+        .badge.high { background: #f97316; }
+        .badge.medium { background: #eab308; }
+        .badge.low { background: #3b82f6; }
+        pre { background: #2d2d2d; color: #ccc; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+        .section { margin-top: 1.5rem; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>SecureCode Auditor - Security Assessment</h1>
+        <p><strong>Project:</strong> SecureCode Test Project</p>
+        <p><strong>Language:</strong> python</p>
+        <p><strong>Scan ID:</strong> 6ab10acdd519d49e7f24aab8</p>
+        <p><strong>Date:</strong> 21/9/2026, 4:15:33 pm</p>
+        <p><strong>Type:</strong> INITIAL</p>
+      </div>
+
+      <div class="card">
+        <h2>Security Summary</h2>
+        <p>Total Findings: 11</p>
+        <p>Critical: 0 | High: 4 | Medium: 3 | Low: 4</p>
+      </div>
+  <div class="card"><h2>Detailed Findings</h2>
+      <div class="finding low">
+        <h3>blacklist <span class="badge low">LOW</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:2</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Consider possible security implications associated with the subprocess module.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding low">
+        <h3>blacklist <span class="badge low">LOW</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:3</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Consider possible security implications associated with pickle module.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding low">
+        <h3>hardcoded_password_string <span class="badge low">LOW</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:9</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Possible hardcoded password: 'Admin@123'</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding high">
+        <h3>start_process_with_a_shell <span class="badge high">HIGH</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:14</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Starting a process with a shell, possible injection detected, security issue.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding high">
+        <h3>subprocess_popen_with_shell_equals_true <span class="badge high">HIGH</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:18</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>subprocess call with shell=True identified, security issue.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding medium">
+        <h3>hardcoded_sql_expressions <span class="badge medium">MEDIUM</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:26</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Possible SQL injection vector through string-based query construction.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding medium">
+        <h3>blacklist <span class="badge medium">MEDIUM</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:31</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding low">
+        <h3>hardcoded_password_string <span class="badge low">LOW</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:34</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Possible hardcoded password: 'mypassword'</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding high">
+        <h3>hashlib <span class="badge high">HIGH</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:35</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Use of weak MD5 hash for security. Consider usedforsecurity=False</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding high">
+        <h3>request_with_no_cert_validation <span class="badge high">HIGH</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:40</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Call to requests with verify=False disabling SSL certificate checks, security issue.</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      <div class="finding medium">
+        <h3>request_without_timeout <span class="badge medium">MEDIUM</span></h3>
+        <p><strong>Status:</strong> OPEN</p>
+        <p><strong>File:</strong> source.py:38</p>
+        <p><strong>Rule:</strong> undefined | <strong>CWE:</strong> N/A | <strong>OWASP:</strong> N/A</p>
+        <div class="section">
+          <h4>Description</h4>
+          <p>Call to requests without timeout</p>
+        </div>
+    <p class="section"><em>AI analysis not generated for this finding.</em></p></div>
+      </div>
+      <div style="text-align: center; margin-top: 2rem; color: #888; font-size: 0.875rem;">
+        Generated by SecureCode Auditor on 4/10/2026, 3:29:24 pm
+      </div>
+    </body>
+    </html>
+  

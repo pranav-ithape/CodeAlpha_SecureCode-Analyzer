@@ -98,7 +98,7 @@ const SecureCodingGuide: React.FC = () => {
     const isBookmarked = bookmarks.includes(guide.id);
 
     return (
-      <div className="animate-in fade-in duration-300 pb-12 max-w-5xl mx-auto space-y-8">
+      <div className="pb-12 max-w-5xl mx-auto space-y-8">
         <button 
           onClick={() => setSearchParams({})}
           className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors font-medium text-sm"
@@ -402,7 +402,7 @@ const SecureCodingGuide: React.FC = () => {
 
   // LIST VIEW
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-12">
+    <div className="space-y-6 pb-12">
       {/* Header */}
       <div className="flex justify-between items-end border-b border-outline-variant pb-6">
         <div className="max-w-3xl">

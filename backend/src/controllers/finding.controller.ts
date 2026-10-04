@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Finding } from '../models/Finding';
 import { Scan } from '../models/Scan';
+import { ManualReview } from '../models/ManualReview';
 
 export const getFindings = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -34,11 +35,20 @@ export const getFindings = async (req: Request, res: Response): Promise<void> =>
       .populate({ path: 'scanId', populate: { path: 'projectId' } })
       .sort({ createdAt: -1 })
       .lean();
+      
+    // Fetch manual reviews for these findings
+    const findingIds = findingsData.map((f: any) => f._id);
+    const manualReviews = await ManualReview.find({ findingId: { $in: findingIds } }).lean();
+    const reviewsMap = new Map();
+    manualReviews.forEach((mr: any) => {
+      reviewsMap.set(mr.findingId.toString(), mr);
+    });
 
     // Map to required format
     const results = findingsData.map((f: any) => {
       const scan = f.scanId;
       const projectName = scan ? (scan.projectId?.name || scan.applicationName) : 'Unknown';
+      const review = reviewsMap.get(f._id.toString());
       
       // Additional project filter check if applied (since we populated project name)
       if (project && project !== 'All' && !projectName.toLowerCase().includes(project.toString().toLowerCase())) {
@@ -67,6 +77,9 @@ export const getFindings = async (req: Request, res: Response): Promise<void> =>
                 f.status === 'FALSE_POSITIVE' ? 'False Positive' : 
                 f.status === 'CONFIRMED' ? 'Confirmed' : 'Under Review'
         ),
+        reviewStatus: review ? (review.decision === 'NEEDS_INVESTIGATION' ? 'Needs Investigation' : 'Reviewed') : 'Not Reviewed',
+        decision: review ? review.decision : null,
+        reviewerRisk: review ? review.reviewerRisk : null,
         created_at: f.createdAt,
         updated_at: f.updatedAt
       };
@@ -104,6 +117,7 @@ export const getFindingById = async (req: Request, res: Response): Promise<void>
     }
 
     const projectName = finding.scanId ? (finding.scanId.projectId?.name || finding.scanId.applicationName) : 'Unknown';
+    const review = await ManualReview.findOne({ findingId: finding._id }).lean();
 
     res.status(200).json({
       id: finding._id,
@@ -130,6 +144,10 @@ export const getFindingById = async (req: Request, res: Response): Promise<void>
               finding.status === 'FALSE_POSITIVE' ? 'False Positive' : 
               finding.status === 'CONFIRMED' ? 'Confirmed' : 'Under Review'
       ),
+      reviewStatus: review ? (review.decision === 'NEEDS_INVESTIGATION' ? 'Needs Investigation' : 'Reviewed') : 'Not Reviewed',
+      decision: review ? review.decision : null,
+      reviewerRisk: review ? review.reviewerRisk : null,
+      manualReviewComments: review ? review.comments : null,
       created_at: finding.createdAt,
       updated_at: finding.updatedAt
     });

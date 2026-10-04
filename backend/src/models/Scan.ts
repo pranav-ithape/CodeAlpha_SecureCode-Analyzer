@@ -18,6 +18,11 @@ export interface IScan extends Document {
   summary: IScanSummary;
   duration?: number;
   completedAt?: Date;
+  scanType: 'INITIAL' | 'RETEST';
+  previousScanId?: mongoose.Types.ObjectId;
+  resolvedFindings?: mongoose.Types.ObjectId[];
+  stillOpenFindings?: mongoose.Types.ObjectId[];
+  newFindings?: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,7 +62,20 @@ const ScanSchema = new Schema<IScan>({
     info: { type: Number, default: 0 }
   },
   duration: { type: Number },
-  completedAt: { type: Date }
+  completedAt: { type: Date },
+  scanType: { 
+    type: String, 
+    enum: ['INITIAL', 'RETEST'], 
+    default: 'INITIAL',
+    required: true
+  },
+  previousScanId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Scan'
+  },
+  resolvedFindings: [{ type: Schema.Types.ObjectId, ref: 'Finding' }],
+  stillOpenFindings: [{ type: Schema.Types.ObjectId, ref: 'Finding' }],
+  newFindings: [{ type: Schema.Types.ObjectId, ref: 'Finding' }]
 }, { timestamps: true });
 
 // Indexes for common queries

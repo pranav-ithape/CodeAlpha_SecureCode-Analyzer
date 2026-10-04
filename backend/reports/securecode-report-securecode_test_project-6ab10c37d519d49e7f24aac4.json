@@ -1,0 +1,94 @@
+{
+  "report": {
+    "project": {
+      "name": "SecureCode Test Project",
+      "description": "Testing MongoDB persistence for SecureCode Analyzer",
+      "language": "javascript"
+    },
+    "scan": {
+      "id": "6ab10c37d519d49e7f24aac4",
+      "type": "INITIAL",
+      "date": "2026-09-21T10:51:35.381Z",
+      "summary": {
+        "total": 4,
+        "critical": 0,
+        "high": 2,
+        "medium": 1,
+        "low": 1,
+        "info": 0
+      }
+    },
+    "retest": null,
+    "findings": [
+      {
+        "_id": "6ab10c3bd519d49e7f24aac5",
+        "scanId": "6ab10c37d519d49e7f24aac4",
+        "title": "javascript-eval",
+        "severity": "HIGH",
+        "category": "code-injection",
+        "language": "javascript",
+        "file": "source.js",
+        "line": 12,
+        "description": "Dynamic code execution can allow attacker-controlled input to execute unintended code.",
+        "impact": "Impact: HIGH",
+        "recommendation": "Avoid eval() and use safer alternatives.",
+        "status": "OPEN",
+        "__v": 0,
+        "createdAt": "2026-09-21T10:51:39.151Z",
+        "updatedAt": "2026-09-21T10:51:39.151Z"
+      },
+      {
+        "_id": "6ab10c3bd519d49e7f24aac6",
+        "scanId": "6ab10c37d519d49e7f24aac4",
+        "title": "javascript-child-process-exec",
+        "severity": "HIGH",
+        "category": "command-injection",
+        "language": "javascript",
+        "file": "source.js",
+        "line": 18,
+        "description": "Using exec() is dangerous if input is not sanitized, leading to command injection.",
+        "impact": "Impact: HIGH",
+        "recommendation": "Use execFile or spawn with carefully controlled arguments.",
+        "status": "OPEN",
+        "__v": 0,
+        "createdAt": "2026-09-21T10:51:39.151Z",
+        "updatedAt": "2026-09-21T10:51:39.151Z"
+      },
+      {
+        "_id": "6ab10c3bd519d49e7f24aac7",
+        "scanId": "6ab10c37d519d49e7f24aac4",
+        "title": "javascript-innerhtml",
+        "severity": "MEDIUM",
+        "category": "xss",
+        "language": "javascript",
+        "file": "source.js",
+        "line": 23,
+        "description": "Assigning to innerHTML can lead to Cross-Site Scripting (XSS) if input is not sanitized.",
+        "impact": "Impact: MEDIUM",
+        "recommendation": "Use textContent or a sanitizer library like DOMPurify.",
+        "status": "OPEN",
+        "__v": 0,
+        "createdAt": "2026-09-21T10:51:39.151Z",
+        "updatedAt": "2026-09-21T10:51:39.151Z"
+      },
+      {
+        "_id": "6ab10c3bd519d49e7f24aac8",
+        "scanId": "6ab10c37d519d49e7f24aac4",
+        "title": "javascript-weak-randomness",
+        "severity": "LOW",
+        "category": "insecure-randomness",
+        "language": "javascript",
+        "file": "source.js",
+        "line": 36,
+        "description": "Math.random() is not cryptographically secure.",
+        "impact": "Impact: LOW",
+        "recommendation": "Use crypto.getRandomValues() or the crypto module in Node.js.",
+        "status": "OPEN",
+        "__v": 0,
+        "createdAt": "2026-09-21T10:51:39.151Z",
+        "updatedAt": "2026-09-21T10:51:39.151Z"
+      }
+    ],
+    "generatedAt": "2026-10-04T09:57:37.931Z"
+  }
+}

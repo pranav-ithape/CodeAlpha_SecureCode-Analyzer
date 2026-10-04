@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Layouts
@@ -9,9 +10,11 @@ import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
 import NewReview from './pages/NewReview';
 import Projects from './pages/Projects';
+import ProjectDetails from './pages/ProjectDetails';
 import ScanHistory from './pages/ScanHistory';
 import ScanResults from './pages/ScanResults';
 import Vulnerabilities from './pages/Vulnerabilities';
+import ManualReview from './pages/ManualReview';
 import FindingDetails from './pages/FindingDetails';
 import Recommendations from './pages/Recommendations';
 import Reports from './pages/Reports';
@@ -24,7 +27,8 @@ import SecureCodingGuide from './pages/SecureCodingGuide';
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
@@ -33,9 +37,11 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="new-scan" element={<NewReview />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="projects/:projectId" element={<ProjectDetails />} />
             <Route path="scan-history" element={<ScanHistory />} />
             <Route path="scans/:scanId" element={<ScanResults />} />
             <Route path="findings" element={<Vulnerabilities />} /> 
+            <Route path="manual-review" element={<ManualReview />} /> 
             <Route path="findings/:findingId" element={<FindingDetails />} />
             <Route path="recommendations" element={<Recommendations />} />
             <Route path="reports" element={<Reports />} />
@@ -46,7 +52,8 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

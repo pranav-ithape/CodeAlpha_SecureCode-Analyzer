@@ -18,7 +18,7 @@ const mapSeverity = (banditSeverity: string): Severity => {
   }
 };
 
-export const analyzePythonCode = async (sourceCode: string): Promise<Finding[]> => {
+export const analyzePythonCode = async (sourceCode: string, fileName?: string): Promise<Finding[]> => {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'secops-bandit-'));
   const tempFilePath = path.join(tempDir, 'source.py');
   
@@ -44,7 +44,7 @@ export const analyzePythonCode = async (sourceCode: string): Promise<Finding[]> 
             title: res.test_name || 'Vulnerability',
             severity: mapSeverity(res.issue_severity),
             category: res.test_id || 'Security',
-            file: 'source.py',
+            file: fileName || 'source.py',
             line: res.line_number,
             description: res.issue_text,
             impact: `Confidence: ${res.issue_confidence}`,

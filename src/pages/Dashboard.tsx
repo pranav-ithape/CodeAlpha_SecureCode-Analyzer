@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-8 animate-in fade-in duration-300 pb-12">
+      <div className="space-y-8 pb-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant pb-6">
           <div className="space-y-2">
             <div className="h-8 w-48 bg-surface-container-high rounded animate-pulse"></div>
@@ -97,7 +97,7 @@ const Dashboard: React.FC = () => {
   const isEmpty = data.total_scans === 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300 pb-12">
+    <div className="space-y-8 pb-12">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant pb-6">
         <div>

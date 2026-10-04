@@ -1,22 +1,22 @@
 import { analyzePythonCode } from '../analyzers/python.analyzer';
-import { analyzeSemgrepCode } from '../analyzers/semgrep.analyzer';
+import { analyzeSemgrepCode, semgrepLanguages } from '../analyzers/semgrep.analyzer';
 import { analyzeCustomCode } from '../analyzers/custom.analyzer';
 import { Finding, ScanSummary } from '../types/finding.types';
 
-export const analyzeSource = async (language: string, sourceCode: string): Promise<Finding[]> => {
+export const analyzeSource = async (language: string, sourceCode: string, fileName?: string): Promise<Finding[]> => {
   const lang = language.toLowerCase();
   let baseFindings: Finding[] = [];
   
   if (lang === 'python') {
-    baseFindings = await analyzePythonCode(sourceCode);
+    baseFindings = await analyzePythonCode(sourceCode, fileName);
   } else if (semgrepLanguages.includes(lang)) {
-    baseFindings = await analyzeSemgrepCode(sourceCode, lang as any);
+    baseFindings = await analyzeSemgrepCode(sourceCode, lang as any, fileName);
   } else {
     throw new Error(`Analyzer for language '${language}' is not implemented.`);
   }
 
   // 2. Run Custom Regex Analyzer for our dynamic Security Rules
-  const customFindings = await analyzeCustomCode(sourceCode, language);
+  const customFindings = await analyzeCustomCode(sourceCode, language, fileName);
 
   // Merge findings (in real life you'd deduplicate, but this works for demo)
   return [...baseFindings, ...customFindings];

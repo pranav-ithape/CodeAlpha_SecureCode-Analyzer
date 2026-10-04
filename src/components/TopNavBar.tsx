@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { useTheme } from '../contexts/ThemeContext';
+
 interface TopNavBarProps { 
   sidebarOpen: boolean;
   toggleSidebar: () => void;
 }
 
 const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => {
-  const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark');
-  };
+  const { theme, toggleTheme } = useTheme();
 
 
 
@@ -37,8 +37,8 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => 
           <button className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors relative" title="Notifications">
             <span className="material-symbols-outlined text-base">notifications</span>
           </button>
-          <button className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" onClick={toggleTheme} title="Toggle Theme">
-            <span className="material-symbols-outlined text-base">contrast</span>
+          <button className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" onClick={toggleTheme} title={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}>
+            <span className="material-symbols-outlined text-base">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
           </button>
         </div>
         <Link to="/new-scan" className="h-8 px-3 rounded-lg bg-primary hover:bg-primary-fixed-dim text-on-primary font-headline-sm text-label-code-sm font-semibold flex items-center gap-1.5 transition-all shadow-sm">

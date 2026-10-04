@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/apiFetch';
 
 const ScanHistory: React.FC = () => {
   const [scans, setScans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchScans = async () => {
@@ -30,7 +32,7 @@ const ScanHistory: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 ">
       <div className="flex justify-between items-center border-b border-outline-variant pb-4">
         <div>
           <h1 className="text-headline-lg font-bold text-on-surface">Scan History</h1>
@@ -60,6 +62,7 @@ const ScanHistory: React.FC = () => {
             <thead className="bg-surface-container border-b border-outline-variant font-semibold">
               <tr>
                 <th className="px-4 py-3">Scan ID</th>
+                <th className="px-4 py-3">Type</th>
                 <th className="px-4 py-3">Application</th>
                 <th className="px-4 py-3">Language</th>
                 <th className="px-4 py-3">Status</th>
@@ -70,9 +73,22 @@ const ScanHistory: React.FC = () => {
             </thead>
             <tbody>
               {filteredScans.map((scan) => (
-                <tr key={scan._id} className="border-b border-outline-variant last:border-0 hover:bg-surface-container-highest transition-colors">
+                <tr key={scan._id} className="border-b border-outline-variant last:border-0 hover:bg-surface-container-highest transition-colors cursor-pointer" onClick={() => navigate(`/scans/${scan._id}`)}>
                   <td className="px-4 py-3 font-mono text-xs text-outline">{scan._id.substring(0, 8)}...</td>
-                  <td className="px-4 py-3 font-medium">{scan.applicationName}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${scan.scanType === 'RETEST' ? 'bg-primary/20 text-primary' : 'bg-surface-container-high text-on-surface'}`}>
+                      {scan.scanType === 'RETEST' ? 'Retest' : 'Initial'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 font-medium">
+                    {scan.applicationName}
+                    {scan.scanType === 'RETEST' && scan.previousScanId && (
+                      <div className="text-xs text-outline font-normal mt-1 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[12px]">turn_right</span>
+                        Prev: {scan.previousScanId.substring(0, 8)}...
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 capitalize">{scan.language}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${

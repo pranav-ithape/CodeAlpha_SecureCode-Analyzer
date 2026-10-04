@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
+import { logAudit } from '../services/audit.service';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-dev';
 
@@ -29,8 +30,16 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       token,
       user: { id: user._id, name: user.name, email: user.email }
     });
+    
+    await logAudit({
+      userId: user._id.toString(),
+      action: 'REGISTRATION',
+      resourceType: 'User',
+      resourceId: user._id.toString(),
+      status: 'SUCCESS'
+    });
   } catch (error: any) {
-    res.status(500).json({ error: 'Error creating user', details: error.message });
+    res.status(500).json({ error: 'Error creating user' }); // Hide error details in prod
   }
 };
 
@@ -45,12 +54,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const user = await User.findOne({ email });
     if (!user) {
+      await logAudit({ action: 'LOGIN_FAILURE', resourceType: 'User', status: 'FAILURE', metadata: { email } });
       res.status(401).json({ error: 'Invalid email or password' });
       return;
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      await logAudit({ userId: user._id.toString(), action: 'LOGIN_FAILURE', resourceType: 'User', status: 'FAILURE' });
       res.status(401).json({ error: 'Invalid email or password' });
       return;
     }
@@ -60,10 +71,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
+    
+    await logAudit({ userId: user._id.toString(), action: 'LOGIN_SUCCESS', resourceType: 'User', status: 'SUCCESS' });
   } catch (error: any) {
-    res.status(500).json({ error: 'Error during login', details: error.message });
+    res.status(500).json({ error: 'Error during login' });
   }
 };
 
@@ -81,8 +94,8 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email } });
+    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
   } catch (error: any) {
-    res.status(500).json({ error: 'Error fetching user data', details: error.message });
+    res.status(500).json({ error: 'Error fetching user data' });
   }
 };

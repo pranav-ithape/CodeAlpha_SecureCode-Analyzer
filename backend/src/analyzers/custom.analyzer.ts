@@ -2,7 +2,7 @@ import { Finding, Severity } from '../types/finding.types';
 import Rule from '../models/Rule';
 import { v4 as uuidv4 } from 'uuid';
 
-export const analyzeCustomCode = async (sourceCode: string, language: string): Promise<Finding[]> => {
+export const analyzeCustomCode = async (sourceCode: string, language: string, fileName?: string): Promise<Finding[]> => {
   const activeRules = await Rule.find({ status: 'Active' });
   const findings: Finding[] = [];
   
@@ -26,7 +26,7 @@ export const analyzeCustomCode = async (sourceCode: string, language: string): P
             title: rule.name,
             severity: rule.severity.toUpperCase() as Severity,
             category: rule.category,
-            file: `source.${language.toLowerCase()}`,
+            file: fileName || `source.${language.toLowerCase()}`,
             line: index + 1,
             description: rule.description,
             impact: `Confidence: ${rule.confidence}`,

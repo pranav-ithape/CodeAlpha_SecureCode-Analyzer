@@ -113,7 +113,7 @@ const SecurityRules: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-12 relative">
+    <div className="space-y-6 pb-12 relative">
       <div className="flex justify-between items-end border-b border-outline-variant pb-4">
         <div>
           <h1 className="text-headline-lg font-bold text-on-surface">Security Rules</h1>
@@ -239,8 +239,8 @@ const SecurityRules: React.FC = () => {
 
       {/* Rule Details Modal */}
       {selectedRule && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200">
-          <div className="bg-surface border border-outline-variant rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
+          <div className="bg-surface border border-outline-variant rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl ">
             
             {/* Header */}
             <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-start bg-surface-container-low">
