@@ -1,18 +1,20 @@
-# SecureCode Analyzer
+# SecureCode Auditor
 
-**SecureCode Analyzer** is a comprehensive web-based Secure Coding Review and Static Application Security Testing (SAST) platform. Designed for high-velocity SecOps pipelines, it identifies common security vulnerabilities in source code and provides actionable remediation guidance, mapping directly to CWE and OWASP standards.
+**SecureCode Auditor** is a comprehensive, industry-grade web-based Secure Coding Review and Static Application Security Testing (SAST) platform. Designed for high-velocity SecOps pipelines, it identifies common security vulnerabilities in source code and provides actionable remediation guidance, AI-assisted analysis, and professional security reports mapping directly to CWE and OWASP standards.
 
-![SecureCode Analyzer Logo](./public/logo.png)
+![SecureCode Auditor Logo](./public/logo-wide.png)
 
 ## 🚀 Key Features
 
 * **Application & Language Selection** — Perform security reviews across multiple programming languages (Python, JavaScript, TypeScript, Java, PHP).
 * **Automated Static Security Analysis** — Leverage integrated scanners (Semgrep, Bandit, and Custom Regex Engines) to deeply analyze code structure and identify vulnerabilities.
+* **AI-Assisted Security Analysis** — Fully integrated with Groq AI (and Gemini) to provide automated vulnerability confirmation, detailed remediation advice, and confident security assessments.
+* **Professional PDF Security Reports** — Generate industry-grade, deliverable-ready PDF security assessment reports for clients, management, and development teams.
+* **Integrated Manual Review Workflow** — A seamless UI for security engineers to manually review, verify, and validate vulnerabilities directly within the finding details.
 * **Security Rules Management** — Browse, search, and enable/disable specific security rules from an internal library of 60+ rules covering SQLi, XSS, SSRF, Deserialization, Path Traversal, and more.
 * **Vulnerability Findings & Triage** — View categorized vulnerabilities including severity, CWE mapping, OWASP references, exact file and line number, and a highlighted vulnerable code snippet.
 * **Secure Coding Guide** — An extensive, built-in developer knowledge base featuring deep dives into vulnerability categories, vulnerable/secure code comparisons, and remediation checklists.
-* **Security Dashboard** — Real-time metrics and dynamic visual charts summarizing your organizational security posture, recent scans, and active vulnerabilities.
-* **Recommendations Engine** — Immediate, actionable insights to remediate findings across your codebase.
+* **Dynamic Security Dashboard** — Real-time metrics and dynamic visual charts (including severity-weighted security scores and vulnerability distribution bars) summarizing your organizational security posture.
 * **Scan History & Project Management** — Track previous security reviews and organize your codebases into distinct projects.
 
 ## 🛠 Technology Stack
@@ -28,7 +30,9 @@
 * **Runtime:** Node.js
 * **Framework:** Express.js with TypeScript
 * **Database:** MongoDB (via Mongoose)
+* **AI Integration:** Groq API / Google Gemini
 * **Security Engines:** Semgrep, Python Bandit, and Custom Regex Engine
+* **Report Generation:** Puppeteer (Headless Chromium)
 
 ## 🏗 Architecture Workflow
 
@@ -54,25 +58,27 @@ Security Analysis Orchestrator
 Normalized Security Findings (Stored in MongoDB)
        │
        ▼
-Findings Dashboard & Remediation Details
+Findings Dashboard & Manual Review
        │ (Links to)
-       ▼
-Secure Coding Guide (Educational Knowledge Base)
+       ├── AI Analysis Engine (Groq/Gemini)
+       ├── PDF Report Generation
+       └── Secure Coding Guide (Educational Knowledge Base)
 ```
 
 ## 📂 Project Structure
 
 ```text
-CodeAlpha_SecureCode-Analyzer/
+CodeAlpha_SecureCode-Auditor/
 │
 ├── backend/                     # Express.js REST API & Scanning Engine
 │   ├── scripts/                 # Database seeders (e.g., seed-rules.ts)
+│   ├── reports/                 # Generated PDF/HTML security reports
 │   ├── src/
 │   │   ├── analyzers/           # Custom Regex, Semgrep, and Bandit integrations
 │   │   ├── controllers/         # Route logic
 │   │   ├── models/              # Mongoose Schemas (Finding, Project, Rule, Scan)
 │   │   ├── routes/              # Express API Routes
-│   │   ├── services/            # Core business logic
+│   │   ├── services/            # Core business logic (AI, Reporting)
 │   │   └── app.ts               # Express application setup
 │   └── package.json
 │
@@ -103,8 +109,8 @@ CodeAlpha_SecureCode-Analyzer/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/pranav-ithape/CodeAlpha_SecureCode-Analyzer.git
-cd CodeAlpha_SecureCode-Analyzer
+git clone https://github.com/pranav-ithape/CodeAlpha_SecureCode-Auditor.git
+cd CodeAlpha_SecureCode-Auditor
 ```
 
 ### 2. Backend Setup
@@ -115,6 +121,7 @@ npm install
 # Create a .env file based on the example
 cp .env.example .env
 # Edit .env and ensure MONGODB_URI is correctly pointed to your database
+# Ensure you configure your AI_PROVIDER, GROQ_API_KEY, and GEMINI_API_KEY as needed
 
 # Seed the Security Rules library into your database
 npm run seed:rules
@@ -147,8 +154,8 @@ Since the application handles sensitive source code, the implementation enforces
 **Pranav Ithape**
 
 * GitHub: [https://github.com/pranav-ithape](https://github.com/pranav-ithape)
-* Repository: [CodeAlpha_SecureCode-Analyzer](https://github.com/pranav-ithape/CodeAlpha_SecureCode-Analyzer)
+* Repository: [CodeAlpha_SecureCode-Auditor](https://github.com/pranav-ithape/CodeAlpha_SecureCode-Auditor)
 
 ---
 
-**SecureCode Analyzer — Find vulnerabilities. Fix faster. Code securely.**
+**SecureCode Auditor — Find vulnerabilities. Fix faster. Code securely.**
