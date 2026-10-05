@@ -109,8 +109,8 @@ const FindingDetails: React.FC = () => {
         method: 'POST'
       });
       const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Failed to generate AI analysis');
+      if (!res.ok || data.success === false || data.error) {
+        throw new Error(data.message || data.error || 'Failed to generate AI analysis');
       }
       setAiAnalysis(data.data);
     } catch (err: any) {
@@ -325,7 +325,7 @@ const FindingDetails: React.FC = () => {
 
                   <div>
                     <h3 className="text-sm font-bold text-on-surface mb-2">Secure Code Example</h3>
-                    <pre className="p-4 bg-[#080C13] rounded-lg overflow-x-auto border border-outline-variant">
+                    <pre className="p-4 bg-surface-container-lowest rounded-lg overflow-x-auto border border-outline-variant">
                       <code className="text-sm font-mono text-on-surface">{aiAnalysis.secureCodeExample}</code>
                     </pre>
                   </div>
@@ -389,7 +389,7 @@ const FindingDetails: React.FC = () => {
           {finding.code_snippet && (
             <div className="p-6 rounded-xl bg-surface-container-low border border-outline-variant">
               <h2 className="text-lg font-bold text-on-surface mb-4">Vulnerable Code</h2>
-              <pre className="p-4 bg-[#080C13] rounded-lg overflow-x-auto border border-outline-variant">
+              <pre className="p-4 bg-surface-container-lowest rounded-lg overflow-x-auto border border-outline-variant">
                 <code className="text-sm font-mono text-on-surface">{finding.code_snippet}</code>
               </pre>
             </div>

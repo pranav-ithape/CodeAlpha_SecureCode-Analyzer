@@ -20,6 +20,8 @@ export interface Finding {
   impact: string;
   recommendation: string;
   status: string;
+  reviewStatus?: string;
+  decision?: string;
   created_at: string;
   updated_at: string;
 }
@@ -41,6 +43,8 @@ const Vulnerabilities: React.FC = () => {
   const [projectFilter, setProjectFilter] = useState(searchParams.get('project') || 'All');
   const [scannerFilter, setScannerFilter] = useState('All');
   const [languageFilter] = useState('All');
+  const [reviewStatusFilter, setReviewStatusFilter] = useState('All');
+  const [decisionFilter, setDecisionFilter] = useState('All');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -64,6 +68,8 @@ const Vulnerabilities: React.FC = () => {
       if (statusFilter !== 'All') queryParams.append('status', statusFilter);
       if (projectFilter !== 'All') queryParams.append('project', projectFilter);
       if (languageFilter !== 'All') queryParams.append('language', languageFilter);
+      if (reviewStatusFilter !== 'All') queryParams.append('reviewStatus', reviewStatusFilter);
+      if (decisionFilter !== 'All') queryParams.append('decision', decisionFilter);
 
       const res = await apiFetch(`/api/findings?${queryParams.toString()}`);
       if (res.ok) {
@@ -91,7 +97,7 @@ const Vulnerabilities: React.FC = () => {
       fetchFindings();
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [search, severityFilter, statusFilter, projectFilter, scannerFilter, languageFilter]);
+  }, [search, severityFilter, statusFilter, projectFilter, scannerFilter, languageFilter, reviewStatusFilter, decisionFilter]);
 
   const summary = {
     total: findings.length,
@@ -195,6 +201,18 @@ const Vulnerabilities: React.FC = () => {
             <option value="Bandit">Bandit</option>
             <option value="Semgrep">Semgrep</option>
           </select>
+          <select value={reviewStatusFilter} onChange={e => setReviewStatusFilter(e.target.value)} className="h-10 px-3 bg-surface-container border border-outline-variant rounded text-on-surface text-sm focus:border-primary outline-none">
+            <option value="All">All Review Status</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Not Reviewed">Not Reviewed</option>
+          </select>
+          <select value={decisionFilter} onChange={e => setDecisionFilter(e.target.value)} className="h-10 px-3 bg-surface-container border border-outline-variant rounded text-on-surface text-sm focus:border-primary outline-none">
+            <option value="All">All Decisions</option>
+            <option value="Pending">Pending</option>
+            <option value="True Positive">True Positive</option>
+            <option value="False Positive">False Positive</option>
+            <option value="Needs Investigation">Needs Investigation</option>
+          </select>
         </div>
       </div>
 
@@ -224,6 +242,7 @@ const Vulnerabilities: React.FC = () => {
                   <th className="px-4 py-3 font-medium">Line</th>
                   <th className="px-4 py-3 font-medium">Scanner</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Review</th>
                   <th className="px-4 py-3 font-medium">Date</th>
                   <th className="px-4 py-3 font-medium text-right">Action</th>
                 </tr>
@@ -256,6 +275,22 @@ const Vulnerabilities: React.FC = () => {
                       }`}>
                         {finding.status}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max ${finding.reviewStatus === 'Reviewed' ? 'bg-primary/20 text-primary' : 'bg-surface-container-high text-outline'}`}>{finding.reviewStatus}</span>
+                        {finding.decision && finding.decision !== 'Pending' && (
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max ${
+                            finding.decision === 'TRUE_POSITIVE' ? 'bg-error/20 text-error' :
+                            finding.decision === 'FALSE_POSITIVE' ? 'bg-green-500/20 text-green-500' :
+                            'bg-yellow-500/20 text-yellow-500'
+                          }`}>
+                            {finding.decision === 'TRUE_POSITIVE' ? 'TRUE POSITIVE' : 
+                             finding.decision === 'FALSE_POSITIVE' ? 'FALSE POSITIVE' : 
+                             'NEEDS INVESTIGATION'}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-outline text-xs whitespace-nowrap">{new Date(finding.created_at).toLocaleDateString()}</td>
                     <td className="px-4 py-3 text-right">

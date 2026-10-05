@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="w-full max-w-md p-8 bg-surface-container-low border border-outline-variant rounded-xl shadow-lg text-center">
         <h2 className="text-headline-lg font-bold text-on-surface mb-2">Create Account</h2>
-        <p className="text-on-surface-variant mb-6">Sign up to SecureCode Analyzer to start scanning.</p>
+        <p className="text-on-surface-variant mb-6">Sign up to SecureCode Auditor to start scanning.</p>
         
         <form className="space-y-4" onSubmit={handleSignUp}>
           {error && <div className="p-2 bg-error bg-opacity-10 text-error rounded text-sm">{error}</div>}

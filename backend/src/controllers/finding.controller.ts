@@ -55,6 +55,23 @@ export const getFindings = async (req: Request, res: Response): Promise<void> =>
         return null;
       }
 
+      const reviewStatus = review ? 'Reviewed' : 'Not Reviewed';
+      const reviewDecision = review ? review.decision : 'Pending';
+
+      if (req.query.reviewStatus && req.query.reviewStatus !== 'All' && reviewStatus !== req.query.reviewStatus) {
+        return null;
+      }
+
+      if (req.query.decision && req.query.decision !== 'All') {
+        const mapDec: any = {
+          'Pending': 'Pending',
+          'True Positive': 'TRUE_POSITIVE',
+          'False Positive': 'FALSE_POSITIVE',
+          'Needs Investigation': 'NEEDS_INVESTIGATION'
+        };
+        if (reviewDecision !== mapDec[req.query.decision.toString()]) return null;
+      }
+
       return {
         id: f._id,
         scan_id: scan?._id || '',
@@ -77,8 +94,8 @@ export const getFindings = async (req: Request, res: Response): Promise<void> =>
                 f.status === 'FALSE_POSITIVE' ? 'False Positive' : 
                 f.status === 'CONFIRMED' ? 'Confirmed' : 'Under Review'
         ),
-        reviewStatus: review ? (review.decision === 'NEEDS_INVESTIGATION' ? 'Needs Investigation' : 'Reviewed') : 'Not Reviewed',
-        decision: review ? review.decision : null,
+        reviewStatus: reviewStatus,
+        decision: reviewDecision,
         reviewerRisk: review ? review.reviewerRisk : null,
         created_at: f.createdAt,
         updated_at: f.updatedAt
@@ -144,8 +161,8 @@ export const getFindingById = async (req: Request, res: Response): Promise<void>
               finding.status === 'FALSE_POSITIVE' ? 'False Positive' : 
               finding.status === 'CONFIRMED' ? 'Confirmed' : 'Under Review'
       ),
-      reviewStatus: review ? (review.decision === 'NEEDS_INVESTIGATION' ? 'Needs Investigation' : 'Reviewed') : 'Not Reviewed',
-      decision: review ? review.decision : null,
+      reviewStatus: review ? 'Reviewed' : 'Not Reviewed',
+      decision: review ? review.decision : 'Pending',
       reviewerRisk: review ? review.reviewerRisk : null,
       manualReviewComments: review ? review.comments : null,
       created_at: finding.createdAt,

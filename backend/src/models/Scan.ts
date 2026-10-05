@@ -13,6 +13,7 @@ export interface IScan extends Document {
   projectId?: mongoose.Types.ObjectId;
   userId?: mongoose.Types.ObjectId;
   applicationName: string;
+  uploadedFileName?: string;
   language: string;
   status: 'pending' | 'analyzing' | 'completed' | 'failed';
   summary: IScanSummary;
@@ -40,6 +41,10 @@ const ScanSchema = new Schema<IScan>({
   applicationName: {
     type: String,
     required: true,
+    trim: true
+  },
+  uploadedFileName: {
+    type: String,
     trim: true
   },
   language: {

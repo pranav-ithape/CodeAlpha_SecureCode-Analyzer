@@ -15,6 +15,13 @@ interface DashboardData {
   recent_findings: any[];
   severity_distribution: any[];
   activity: any[];
+  review?: {
+    reviewed: number;
+    notReviewed: number;
+    truePositive: number;
+    falsePositive: number;
+    needsInvestigation: number;
+  };
 }
 
 const Dashboard: React.FC = () => {
@@ -85,13 +92,13 @@ const Dashboard: React.FC = () => {
   }
 
   const summaryCards = [
-    { title: 'Total Projects', count: data.total_projects, icon: 'folder_special', color: 'text-primary' },
-    { title: 'Total Scans', count: data.total_scans, icon: 'radar', color: 'text-primary' },
-    { title: 'Total Findings', count: data.total_findings, icon: 'bug_report', color: 'text-primary' },
-    { title: 'Critical', count: data.critical, icon: 'dangerous', color: 'text-error' },
-    { title: 'High', count: data.high, icon: 'warning', color: 'text-orange-500' },
-    { title: 'Medium', count: data.medium, icon: 'error', color: 'text-yellow-500' },
-    { title: 'Low', count: data.low, icon: 'info', color: 'text-blue-500' },
+    { title: 'Total Projects', count: data.total_projects, icon: 'folder_special', color: 'text-primary', link: '/projects' },
+    { title: 'Total Scans', count: data.total_scans, icon: 'radar', color: 'text-primary', link: '/history' },
+    { title: 'Total Findings', count: data.total_findings, icon: 'bug_report', color: 'text-primary', link: '/findings' },
+    { title: 'Critical', count: data.critical, icon: 'dangerous', color: 'text-error', link: '/findings?severity=Critical' },
+    { title: 'High', count: data.high, icon: 'warning', color: 'text-orange-500', link: '/findings?severity=High' },
+    { title: 'Medium', count: data.medium, icon: 'error', color: 'text-yellow-500', link: '/findings?severity=Medium' },
+    { title: 'Low', count: data.low, icon: 'info', color: 'text-blue-500', link: '/findings?severity=Low' },
   ];
 
   const isEmpty = data.total_scans === 0;
@@ -106,13 +113,17 @@ const Dashboard: React.FC = () => {
             Monitor your code security posture and recent analysis activity.
           </p>
         </div>
-
+        
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 shrink-0">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          <span className="text-xs font-bold uppercase tracking-wider">Live Data</span>
+        </div>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
         {summaryCards.map((card, idx) => (
-          <div key={idx} className="p-5 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between hover:shadow-md transition-shadow">
+          <Link to={card.link} key={idx} className="p-5 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-between hover:shadow-md transition-shadow cursor-pointer hover:border-primary/50">
             <div className="flex items-center justify-between">
               <span className="text-label-code-sm font-label-code-sm text-outline font-semibold">{card.title}</span>
               <span className={`material-symbols-outlined text-xl ${card.color || 'text-primary'}`}>{card.icon}</span>
@@ -120,7 +131,7 @@ const Dashboard: React.FC = () => {
             <div className="mt-4 flex items-baseline gap-2">
               <span className="text-4xl font-bold font-headline-lg text-on-surface">{card.count}</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -178,15 +189,31 @@ const Dashboard: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col justify-center gap-6">
-                  {data.severity_distribution.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-4">
-                      <span className="w-16 text-sm font-medium text-on-surface-variant">{item.label}</span>
-                      <div className="flex-1 h-3 bg-surface-container-high rounded-full overflow-hidden">
-                        <div className={`h-full ${item.color} rounded-full`} style={{ width: item.width }}></div>
+                  {(() => {
+                    const maxCount = Math.max(...data.severity_distribution.map(item => item.count), 0);
+                    const getBarWidth = (count: number) => {
+                      if (maxCount === 0 || count === 0) return 0;
+                      return Math.max((count / maxCount) * 100, 2);
+                    };
+                    const colorMap: Record<string, string> = {
+                      Critical: 'bg-error',
+                      High: 'bg-orange-500',
+                      Medium: 'bg-yellow-500',
+                      Low: 'bg-blue-500'
+                    };
+                    return data.severity_distribution.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-4">
+                        <span className="w-16 text-sm font-medium text-on-surface-variant">{item.label}</span>
+                        <div className="flex-1 h-3 bg-surface-container-high rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${colorMap[item.label] || item.color} rounded-full`} 
+                            style={{ width: `${getBarWidth(item.count)}%` }}
+                          ></div>
+                        </div>
+                        <span className="w-8 text-right text-sm font-bold text-on-surface">{item.count}</span>
                       </div>
-                      <span className="w-8 text-right text-sm font-bold text-on-surface">{item.count}</span>
-                    </div>
-                  ))}
+                    ));
+                  })()}
                 </div>
               )}
             </div>
@@ -253,9 +280,9 @@ const Dashboard: React.FC = () => {
                         </td>
                         <td className="px-5 py-4 text-outline">{new Date(scan.date).toLocaleDateString()}</td>
                         <td className="px-5 py-4 text-right">
-                          <button className="text-primary hover:bg-primary-container p-2 rounded transition-colors" title="View Report">
+                          <Link to={`/history`} className="text-primary hover:bg-primary-container p-2 rounded transition-colors inline-block" title="View Report">
                             <span className="material-symbols-outlined text-lg">description</span>
-                          </button>
+                          </Link>
                         </td>
                       </tr>
                     ))}
@@ -288,7 +315,7 @@ const Dashboard: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-outline-variant text-sm">
                     {data.recent_findings.map((finding) => (
-                      <tr key={finding._id} className="hover:bg-surface-container-low transition-colors">
+                      <tr key={finding._id} className="hover:bg-surface-container-low transition-colors cursor-pointer" onClick={() => window.location.href = `/findings/${finding._id}`}>
                         <td className="px-5 py-4">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
                             finding.severity === 'Critical' ? 'bg-error/10 text-error border border-error/20' : 
@@ -327,28 +354,66 @@ const Dashboard: React.FC = () => {
             )}
           </div>
 
-          {/* Security Activity Timeline */}
-          {data.activity.length > 0 && (
-            <div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm p-6">
-              <h2 className="text-lg font-bold text-on-surface mb-6">Security Activity</h2>
-              <div className="relative border-l border-outline-variant ml-4 space-y-6">
-                {data.activity.map((act) => (
-                  <div key={act.id} className="relative pl-6">
-                    <div className={`absolute -left-3.5 top-0.5 w-7 h-7 rounded-full flex items-center justify-center bg-surface-container-lowest border-2 border-outline-variant shadow-sm ${
-                      act.type === 'vulnerability_found' ? 'text-error' : 
-                      act.type === 'scan_complete' ? 'text-green-500' : 'text-primary'
-                    }`}>
-                      <span className="material-symbols-outlined text-sm">{act.icon}</span>
+          {/* Security Activity Timeline & Security Review */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {data.activity.length > 0 && (
+              <div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm p-6">
+                <h2 className="text-lg font-bold text-on-surface mb-6">Security Activity</h2>
+                <div className="relative border-l border-outline-variant ml-4 space-y-6">
+                  {data.activity.map((act) => (
+                    <div key={act.id} className="relative pl-6">
+                      <div className={`absolute -left-3.5 top-0.5 w-7 h-7 rounded-full flex items-center justify-center bg-surface-container-lowest border-2 border-outline-variant shadow-sm ${
+                        act.type === 'vulnerability_found' ? 'text-error' : 
+                        act.type === 'scan_complete' ? 'text-green-500' : 'text-primary'
+                      }`}>
+                        <span className="material-symbols-outlined text-sm">{act.icon}</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-on-surface">{act.text}</p>
+                        <p className="text-xs text-outline mt-1">{new Date(act.time).toLocaleString()}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-on-surface">{act.text}</p>
-                      <p className="text-xs text-outline mt-1">{new Date(act.time).toLocaleString()}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+            
+            {data.review && (
+              <div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm p-6 h-max">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-lg font-bold text-on-surface">Security Review</h2>
+                  <Link to="/findings" className="text-sm text-primary hover:underline font-medium">View Reviews</Link>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <Link to="/findings?reviewStatus=Reviewed" className="p-4 bg-surface-container-low rounded-lg border border-outline-variant hover:border-primary/50 cursor-pointer">
+                    <span className="block text-sm text-outline font-medium mb-1">Reviewed</span>
+                    <span className="text-2xl font-bold text-on-surface">{data.review.reviewed}</span>
+                  </Link>
+                  <Link to="/findings?reviewStatus=Not+Reviewed" className="p-4 bg-surface-container-low rounded-lg border border-outline-variant hover:border-primary/50 cursor-pointer">
+                    <span className="block text-sm text-outline font-medium mb-1">Not Reviewed</span>
+                    <span className="text-2xl font-bold text-on-surface">{data.review.notReviewed}</span>
+                  </Link>
+                </div>
+                
+                <h3 className="text-sm font-bold text-on-surface-variant mb-3 uppercase tracking-wider">Review Decisions</h3>
+                <div className="space-y-3">
+                  <Link to="/findings?decision=True+Positive" className="flex items-center justify-between p-3 bg-error-container text-on-error-container rounded-lg hover:opacity-90">
+                    <span className="font-semibold text-sm">True Positive</span>
+                    <span className="font-bold">{data.review.truePositive}</span>
+                  </Link>
+                  <Link to="/findings?decision=Needs+Investigation" className="flex items-center justify-between p-3 bg-yellow-500/10 text-yellow-600 rounded-lg hover:opacity-90">
+                    <span className="font-semibold text-sm">Needs Investigation</span>
+                    <span className="font-bold">{data.review.needsInvestigation}</span>
+                  </Link>
+                  <Link to="/findings?decision=False+Positive" className="flex items-center justify-between p-3 bg-green-500/10 text-green-600 rounded-lg hover:opacity-90">
+                    <span className="font-semibold text-sm">False Positive</span>
+                    <span className="font-bold">{data.review.falsePositive}</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>

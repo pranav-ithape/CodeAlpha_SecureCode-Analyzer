@@ -14,7 +14,6 @@ import ProjectDetails from './pages/ProjectDetails';
 import ScanHistory from './pages/ScanHistory';
 import ScanResults from './pages/ScanResults';
 import Vulnerabilities from './pages/Vulnerabilities';
-import ManualReview from './pages/ManualReview';
 import FindingDetails from './pages/FindingDetails';
 import Recommendations from './pages/Recommendations';
 import Reports from './pages/Reports';
@@ -41,7 +40,7 @@ function App() {
             <Route path="scan-history" element={<ScanHistory />} />
             <Route path="scans/:scanId" element={<ScanResults />} />
             <Route path="findings" element={<Vulnerabilities />} /> 
-            <Route path="manual-review" element={<ManualReview />} /> 
+            <Route path="manual-review" element={<Navigate to="/findings" replace />} /> 
             <Route path="findings/:findingId" element={<FindingDetails />} />
             <Route path="recommendations" element={<Recommendations />} />
             <Route path="reports" element={<Reports />} />

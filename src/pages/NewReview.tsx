@@ -339,9 +339,9 @@ const NewReview: React.FC = () => {
 
           {inputType === 'paste' && (
             <div className="space-y-3">
-              <div className="rounded-lg border border-outline-variant bg-[#080C13] flex flex-col overflow-hidden">
+              <div className="rounded-lg border border-outline-variant bg-surface-container-lowest flex flex-col overflow-hidden">
                 <div className="flex flex-1 min-h-[280px] overflow-hidden">
-                  <div className="w-12 bg-[#0B0F17] border-r border-outline-variant text-outline font-label-code-sm py-2 flex flex-col items-center leading-[22px] font-mono text-right pr-2 select-none">
+                  <div className="w-12 bg-surface-container-low border-r border-outline-variant text-outline font-label-code-sm py-2 flex flex-col items-center leading-[22px] font-mono text-right pr-2 select-none">
                     {Array.from({ length: 10 }).map((_, i) => <span key={i}>{i + 1}</span>)}
                   </div>
                   <textarea

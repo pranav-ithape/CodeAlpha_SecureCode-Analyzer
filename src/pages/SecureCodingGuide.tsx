@@ -184,8 +184,8 @@ const SecureCodingGuide: React.FC = () => {
               <span className="material-symbols-outlined text-xl">code_off</span>
               4. Vulnerable Code
             </h2>
-            <div className="bg-[#1e1e1e] p-4 rounded-xl border border-error/30 overflow-x-auto">
-              <pre className="font-mono text-sm text-[#d4d4d4] m-0"><code className={`language-${guide.vulnerableCode.language}`}>{guide.vulnerableCode.code}</code></pre>
+            <div className="bg-surface-container-lowest p-4 rounded-xl border border-error/30 overflow-x-auto">
+              <pre className="font-mono text-sm text-on-surface m-0"><code className={`language-${guide.vulnerableCode.language}`}>{guide.vulnerableCode.code}</code></pre>
             </div>
           </section>
           <section className="space-y-4">
@@ -208,8 +208,8 @@ const SecureCodingGuide: React.FC = () => {
               <span className="material-symbols-outlined text-xl">code</span>
               6. Secure Code
             </h2>
-            <div className="bg-[#1e1e1e] p-4 rounded-xl border border-green-500/30 overflow-x-auto">
-              <pre className="font-mono text-sm text-[#d4d4d4] m-0"><code className={`language-${guide.secureCode.language}`}>{guide.secureCode.code}</code></pre>
+            <div className="bg-surface-container-lowest p-4 rounded-xl border border-green-500/30 overflow-x-auto">
+              <pre className="font-mono text-sm text-on-surface m-0"><code className={`language-${guide.secureCode.language}`}>{guide.secureCode.code}</code></pre>
             </div>
           </section>
           <section className="space-y-4">

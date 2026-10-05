@@ -404,19 +404,19 @@ const Settings: React.FC = () => {
                     <div>
                       <h4 className="font-bold text-on-surface flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">smart_toy</span>
-                        Gemini AI Analysis
+                        {integrations?.ai?.provider || 'AI Analysis'}
                       </h4>
                       <p className="text-sm text-outline mt-1 max-w-md">Provides automated vulnerability analysis, remediation advice, and confident security assessments.</p>
                     </div>
-                    {integrations?.gemini?.status === 'Configured' ? (
+                    {integrations?.ai?.status === 'Configured' ? (
                       <span className="px-3 py-1 bg-green-500/10 text-green-500 text-xs font-bold rounded-full">Active</span>
                     ) : (
                       <span className="px-3 py-1 bg-surface-variant text-outline text-xs font-bold rounded-full">Not Configured</span>
                     )}
                   </div>
-                  {integrations?.gemini?.status === 'Configured' && (
+                  {integrations?.ai?.status === 'Configured' && (
                     <div className="mt-4 bg-surface-container-low p-3 rounded text-sm text-on-surface-variant font-mono">
-                      Model: {integrations.gemini.model}
+                      Model: {integrations.ai.model}
                     </div>
                   )}
                   <p className="text-xs text-outline mt-3">Configuration is securely managed through backend environment variables.</p>

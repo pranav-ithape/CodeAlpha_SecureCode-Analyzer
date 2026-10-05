@@ -37,6 +37,7 @@ export const submitScan = async (req: Request, res: Response): Promise<void> => 
     projectId: projectId || undefined,
     userId,
     applicationName: finalAppName,
+    uploadedFileName: fileName,
     language,
     status: 'analyzing',
   });
@@ -232,6 +233,7 @@ export const retestScan = async (req: Request, res: Response): Promise<void> => 
     projectId: previousScan.projectId,
     userId,
     applicationName: previousScan.applicationName,
+    uploadedFileName: fileName || previousScan.uploadedFileName,
     language: previousScan.language,
     status: 'analyzing',
     scanType: 'RETEST',

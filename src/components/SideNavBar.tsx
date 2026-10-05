@@ -30,7 +30,6 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
     { name: 'New Scan', path: '/new-scan', icon: 'add_moderator' },
     { name: 'Projects', path: '/projects', icon: 'folder_special' },
     { name: 'Findings', path: '/findings', icon: 'bug_report' },
-    { name: 'Manual Review', path: '/manual-review', icon: 'fact_check' },
     { name: 'Recommendations', path: '/recommendations', icon: 'lightbulb' },
     { name: 'Scan History', path: '/scan-history', icon: 'history' },
     { name: 'Reports', path: '/reports', icon: 'assessment' },
@@ -50,7 +49,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
               <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <div className="truncate">
-              <div className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight truncate leading-tight">SecureCode</div>
+              <div className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight truncate leading-tight">SecureCode Auditor</div>
               <div className="font-label-code-sm text-label-code-sm text-outline flex items-center gap-1.5">
                 <span className="text-secondary font-medium">SAST Platform</span>
               </div>

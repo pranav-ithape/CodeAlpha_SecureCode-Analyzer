@@ -53,7 +53,7 @@ router.get('/analysis/:findingId', requireFindingAccess, async (req, res) => {
 });
 
 // Generate or regenerate AI analysis
-router.post('/analyze/:findingId', requireFindingAccess, requireRole(['ADMIN', 'SECURITY_ANALYST']), async (req, res) => {
+router.post('/analyze/:findingId', requireFindingAccess, requireRole(['ADMIN', 'SECURITY_ANALYST', 'DEVELOPER']), async (req, res) => {
   try {
     const finding = await Finding.findById(req.params.findingId);
     if (!finding) {
@@ -74,15 +74,26 @@ router.post('/analyze/:findingId', requireFindingAccess, requireRole(['ADMIN', '
   } catch (error: any) {
     console.error('AI generation error:', error);
     const msg = error.message?.toLowerCase() || '';
-    
+    if (msg.includes('not configured')) {
+      return res.status(500).json({ success: false, message: 'AI service configuration is missing.' });
+    }
+    if (msg.includes('api key') || msg.includes('401') || msg.includes('403')) {
+      return res.status(500).json({ success: false, message: 'AI service authentication failed.' });
+    }
     if (msg.includes('429') || msg.includes('quota') || msg.includes('rate limit')) {
-      return res.status(429).json({ success: false, message: 'AI service rate limit reached' });
+      return res.status(429).json({ success: false, message: 'AI service rate limit reached. Please try again later.' });
     }
-    if (msg.includes('503') || msg.includes('unavailable') || msg.includes('overloaded')) {
-      return res.status(503).json({ success: false, message: 'AI service temporarily unavailable' });
+    if (msg.includes('400') || msg.includes('schema') || msg.includes('format')) {
+      return res.status(400).json({ success: false, message: 'The AI request was rejected.' });
+    }
+    if (msg.includes('parse') || msg.includes('empty response')) {
+      return res.status(500).json({ success: false, message: 'The AI service returned an invalid response.' });
+    }
+    if (msg.includes('503') || msg.includes('500') || msg.includes('unavailable') || msg.includes('overloaded') || msg.includes('fetch failed')) {
+      return res.status(503).json({ success: false, message: 'The AI service is temporarily unavailable.' });
     }
     
-    return res.status(500).json({ success: false, message: 'AI analysis failed' });
+    return res.status(500).json({ success: false, message: 'The AI service is temporarily unavailable.' });
   }
 });
 

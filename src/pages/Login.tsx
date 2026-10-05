@@ -89,7 +89,7 @@ const Login: React.FC = () => {
                 <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <span className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface block">SecureCode Analyzer</span>
+                <span className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface block">SecureCode Auditor</span>
                 <span className="font-label-code-sm text-label-code-sm text-primary tracking-wider uppercase">Enterprise SAST Engine v4.2</span>
               </div>
             </div>
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary overflow-hidden">
                   <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
                 </div>
-                <span className="font-headline-sm text-headline-sm font-bold text-on-surface">SecureCode Analyzer</span>
+                <span className="font-headline-sm text-headline-sm font-bold text-on-surface">SecureCode Auditor</span>
               </div>
               <h2 className="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
                 Welcome back

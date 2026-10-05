@@ -117,16 +117,20 @@ export const updatePolicies = async (req: Request, res: Response) => {
 // Get integrations
 export const getIntegrations = async (req: Request, res: Response) => {
   try {
-    // Determine integration status from environment safely
-    const geminiConfigured = !!process.env.GEMINI_API_KEY;
-    const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+    const provider = process.env.AI_PROVIDER?.toLowerCase() === 'groq' ? 'groq' : 'gemini';
+    const isGroq = provider === 'groq';
+    const configured = isGroq ? !!process.env.GROQ_API_KEY : !!process.env.GEMINI_API_KEY;
+    const model = isGroq 
+      ? (process.env.GROQ_MODEL || 'llama3-8b-8192') 
+      : (process.env.GEMINI_MODEL || 'gemini-1.5-flash');
     
     return res.status(200).json({
       success: true,
       integrations: {
-        gemini: {
-          status: geminiConfigured ? 'Configured' : 'Not configured',
-          model: geminiConfigured ? model : 'N/A'
+        ai: {
+          provider: isGroq ? 'Groq AI' : 'Google Gemini',
+          status: configured ? 'Configured' : 'Not configured',
+          model: configured ? model : 'N/A'
         },
         git: {
           status: 'Not configured'
