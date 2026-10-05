@@ -69,7 +69,7 @@ const ScanResults: React.FC = () => {
     <div className="space-y-6 pb-12">
       <div className="flex justify-between items-end border-b border-outline-variant pb-4">
         <div>
-          <Link to="/history" className="text-sm text-outline hover:text-primary flex items-center gap-1 mb-2 transition-colors">
+          <Link to="/scan-history" className="text-sm text-outline hover:text-primary flex items-center gap-1 mb-2 transition-colors">
             <span className="material-symbols-outlined text-sm">arrow_back</span>
             Back to History
           </Link>

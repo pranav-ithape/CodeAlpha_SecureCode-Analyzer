@@ -252,7 +252,7 @@ const NewReview: React.FC = () => {
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
               >
-                <option value="" disabled>Select Project ▼</option>
+                <option value="" disabled>Select Project</option>
                 {projects.map(p => (
                   <option key={p._id} value={p._id}>{p.name}</option>
                 ))}

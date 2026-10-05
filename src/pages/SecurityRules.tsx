@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { apiFetch } from '../utils/apiFetch';
+import { useAuth } from '../contexts/AuthContext';
 
 export interface Rule {
   _id: string;
@@ -25,6 +27,13 @@ const SecurityRules: React.FC = () => {
   const [rules, setRules] = useState<Rule[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
+
+  const { user } = useAuth();
+  const canEdit = user?.role === 'ADMIN' || user?.role === 'SECURITY_ANALYST';
+
+  // State for confirm dialog and toasts
+  const [ruleToDisable, setRuleToDisable] = useState<Rule | null>(null);
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,15 +63,34 @@ const SecurityRules: React.FC = () => {
       const res = await apiFetch('/api/rules');
       if (res.ok) {
         setRules(await res.json());
+      } else {
+        showToast('Unable to load security rules.', 'error');
       }
     } catch (e) {
       console.error(e);
+      showToast('Unable to load security rules.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleRuleStatus = async (rule: Rule) => {
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleToggleClick = (rule: Rule, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!canEdit) return;
+    
+    if (rule.status === 'Active') {
+      setRuleToDisable(rule);
+    } else {
+      executeToggle(rule);
+    }
+  };
+
+  const executeToggle = async (rule: Rule) => {
     const newStatus = rule.status === 'Active' ? 'Inactive' : 'Active';
     try {
       const res = await apiFetch(`/api/rules/${rule._id}/status`, {
@@ -75,9 +103,18 @@ const SecurityRules: React.FC = () => {
         if (selectedRule && selectedRule._id === updatedRule._id) {
           setSelectedRule(updatedRule);
         }
+        showToast(
+          newStatus === 'Active' ? 'Security rule enabled successfully.' : 'Security rule disabled successfully.',
+          'success'
+        );
+      } else {
+        showToast('Failed to update rule status.', 'error');
       }
     } catch (e) {
       console.error('Failed to update rule status', e);
+      showToast('Failed to update rule status.', 'error');
+    } finally {
+      setRuleToDisable(null);
     }
   };
 
@@ -100,6 +137,7 @@ const SecurityRules: React.FC = () => {
   });
 
   const categories = Array.from(new Set(rules.map(r => r.category))).sort();
+  const languages = Array.from(new Set(rules.flatMap(r => r.supportedLanguages))).filter(l => l !== 'All').sort();
   const activeCount = rules.filter(r => r.status === 'Active').length;
   const criticalCount = rules.filter(r => r.severity.toLowerCase() === 'critical').length;
   const highCount = rules.filter(r => r.severity.toLowerCase() === 'high').length;
@@ -168,10 +206,7 @@ const SecurityRules: React.FC = () => {
         </select>
         <select className="h-10 px-3 text-sm bg-surface-container border border-outline-variant rounded-lg text-on-surface outline-none focus:border-primary" value={languageFilter} onChange={e => setLanguageFilter(e.target.value)}>
           <option value="">All Languages</option>
-          <option value="Python">Python</option>
-          <option value="JavaScript">JavaScript</option>
-          <option value="Java">Java</option>
-          <option value="PHP">PHP</option>
+          {languages.map(l => <option key={l} value={l}>{l}</option>)}
         </select>
         <select className="h-10 px-3 text-sm bg-surface-container border border-outline-variant rounded-lg text-on-surface outline-none focus:border-primary" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="">All Statuses</option>
@@ -190,9 +225,15 @@ const SecurityRules: React.FC = () => {
       ) : filteredRules.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 border border-outline-variant border-dashed rounded-xl bg-surface-container-low text-center">
           <span className="material-symbols-outlined text-4xl text-outline mb-4">search_off</span>
-          <h3 className="text-headline-sm font-bold text-on-surface">No rules found</h3>
-          <p className="text-on-surface-variant max-w-sm mt-2">Try adjusting your filters or search query.</p>
-          <button onClick={clearFilters} className="mt-4 text-primary font-medium hover:underline">Clear Filters</button>
+          <h3 className="text-headline-sm font-bold text-on-surface">
+            {rules.length === 0 ? 'No security rules available.' : 'No rules match your search.'}
+          </h3>
+          {rules.length > 0 && (
+            <>
+              <p className="text-on-surface-variant max-w-sm mt-2">Try adjusting your filters or search query.</p>
+              <button onClick={clearFilters} className="mt-4 text-primary font-medium hover:underline">Clear Filters</button>
+            </>
+          )}
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-low shadow-sm">
@@ -223,12 +264,21 @@ const SecurityRules: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
-                    <button 
-                      onClick={() => toggleRuleStatus(rule)}
-                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${rule.status === 'Active' ? 'bg-primary' : 'bg-outline-variant'}`}
-                    >
-                      <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${rule.status === 'Active' ? 'translate-x-5' : 'translate-x-1'}`} />
-                    </button>
+                    {canEdit ? (
+                      <button 
+                        onClick={(e) => handleToggleClick(rule, e)}
+                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${rule.status === 'Active' ? 'bg-primary' : 'bg-outline-variant'}`}
+                        title={rule.status === 'Active' ? 'Click to Disable' : 'Click to Enable'}
+                      >
+                        <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${rule.status === 'Active' ? 'translate-x-5' : 'translate-x-1'}`} />
+                      </button>
+                    ) : (
+                      <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase border ${
+                        rule.status === 'Active' ? 'border-primary text-primary bg-primary/10' : 'border-outline text-outline bg-surface-container'
+                      }`}>
+                        {rule.status}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -238,9 +288,9 @@ const SecurityRules: React.FC = () => {
       )}
 
       {/* Rule Details Modal */}
-      {selectedRule && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
-          <div className="bg-surface border border-outline-variant rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl ">
+      {selectedRule && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/60 backdrop-blur-sm">
+          <div className="bg-surface border border-outline-variant rounded-2xl w-full max-w-6xl h-[90vh] overflow-hidden flex flex-col shadow-2xl">
             
             {/* Header */}
             <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-start bg-surface-container-low">
@@ -264,14 +314,16 @@ const SecurityRules: React.FC = () => {
                 <h2 className="text-2xl font-bold text-on-surface">{selectedRule.name}</h2>
               </div>
               <div className="flex items-center gap-3">
-                <button 
-                  onClick={() => toggleRuleStatus(selectedRule)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors border ${
-                    selectedRule.status === 'Active' ? 'bg-surface-container border-outline text-on-surface hover:bg-surface-container-highest' : 'bg-primary border-primary text-on-primary hover:bg-primary-fixed-dim'
-                  }`}
-                >
-                  {selectedRule.status === 'Active' ? 'Disable Rule' : 'Enable Rule'}
-                </button>
+                {canEdit && (
+                  <button 
+                    onClick={() => handleToggleClick(selectedRule)}
+                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors border ${
+                      selectedRule.status === 'Active' ? 'bg-surface-container border-outline text-on-surface hover:bg-surface-container-highest' : 'bg-primary border-primary text-on-primary hover:bg-primary-fixed-dim'
+                    }`}
+                  >
+                    {selectedRule.status === 'Active' ? 'Disable Rule' : 'Enable Rule'}
+                  </button>
+                )}
                 <button 
                   className="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"
                   onClick={() => {
@@ -304,8 +356,8 @@ const SecurityRules: React.FC = () => {
                   <p className="text-sm font-medium text-on-surface">{selectedRule.owasp}</p>
                 </div>
                 <div className="bg-surface-container px-4 py-2 rounded-lg border border-outline-variant/50 flex-1 min-w-[150px]">
-                  <p className="text-xs text-outline mb-1 font-semibold uppercase">Confidence</p>
-                  <p className="text-sm font-medium text-on-surface">{selectedRule.confidence}</p>
+                  <p className="text-xs text-outline mb-1 font-semibold uppercase">Scanner</p>
+                  <p className="text-sm font-medium text-on-surface">Custom / Regex</p>
                 </div>
               </div>
 
@@ -341,7 +393,7 @@ const SecurityRules: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-on-surface mb-2 border-b border-outline-variant pb-1">Remediation Guidance</h3>
+                <h3 className="text-lg font-bold text-on-surface mb-2 border-b border-outline-variant pb-1">Secure Coding Recommendation</h3>
                 <div className="bg-surface-container px-5 py-4 rounded-lg border border-outline-variant/50 text-sm text-on-surface-variant leading-relaxed">
                   {selectedRule.remediation}
                 </div>
@@ -361,8 +413,65 @@ const SecurityRules: React.FC = () => {
 
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
+
+      {/* Confirmation Dialog */}
+      {ruleToDisable && createPortal(
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface border border-outline-variant rounded-xl shadow-2xl p-6 w-full max-w-md animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error">
+                <span className="material-symbols-outlined">warning</span>
+              </div>
+              <h3 className="text-xl font-bold text-on-surface">Disable Security Rule?</h3>
+            </div>
+            
+            <p className="text-on-surface-variant text-sm mb-4">
+              Disabling <span className="font-bold text-on-surface">{ruleToDisable.ruleId}</span> means future scans will no longer check for this security issue.
+            </p>
+            <p className="text-on-surface-variant text-sm mb-6">
+              Existing findings will <span className="font-bold text-on-surface">not</span> be deleted.
+            </p>
+            
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setRuleToDisable(null)}
+                className="px-4 py-2 rounded-lg font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => executeToggle(ruleToDisable)}
+                className="px-4 py-2 rounded-lg font-medium bg-error text-white hover:bg-error/90 transition-colors shadow-sm"
+              >
+                Disable Rule
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Toast Notification */}
+      {toast && createPortal(
+        <div className="fixed bottom-6 right-6 z-[120] animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border ${
+            toast.type === 'success' ? 'bg-surface-container border-green-500/30 text-on-surface' : 'bg-surface-container border-error/30 text-error'
+          }`}>
+            <span className={`material-symbols-outlined text-lg ${toast.type === 'success' ? 'text-green-500' : 'text-error'}`}>
+              {toast.type === 'success' ? 'check_circle' : 'error'}
+            </span>
+            <span className="font-medium text-sm">{toast.message}</span>
+            <button onClick={() => setToast(null)} className="ml-2 text-on-surface-variant hover:text-on-surface">
+              <span className="material-symbols-outlined text-sm">close</span>
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
+
     </div>
   );
 };

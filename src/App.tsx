@@ -23,6 +23,8 @@ import SignUp from './pages/SignUp';
 import SecurityRules from './pages/SecurityRules';
 import SecureCodingGuide from './pages/SecureCodingGuide';
 
+import NotFound from './pages/NotFound';
+
 function App() {
   return (
     <AuthProvider>
@@ -49,7 +51,7 @@ function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         </BrowserRouter>
       </ThemeProvider>

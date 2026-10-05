@@ -144,4 +144,45 @@
       filter: blur(0);
     }
   }
+
+  /* Global Premium Effects */
+  .dark .bg-surface-container, 
+  .dark .bg-surface-container-low, 
+  .dark .bg-surface-container-lowest,
+  .dark .bg-surface-container-high,
+  .dark .bg-surface-container-highest {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background-color: color-mix(in srgb, var(--color-surface-container) 65%, transparent);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Keep SideNav/TopNav distinct if they use lowest/low */
+  .dark .bg-surface-container-lowest {
+    background-color: color-mix(in srgb, var(--color-surface-container-lowest) 50%, transparent);
+  }
+
+  .dark .border-outline-variant {
+    border-color: color-mix(in srgb, var(--color-outline-variant) 25%, transparent);
+  }
+  
+  .dark button.bg-primary {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 35%, transparent);
+    transition: all 0.3s ease;
+  }
+  
+  .dark button.bg-primary:hover {
+    box-shadow: 0 0 30px color-mix(in srgb, var(--color-primary) 60%, transparent);
+    transform: translateY(-1px);
+  }
+  
+  /* Link hover states */
+  .dark a.bg-primary {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 35%, transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .dark a.bg-primary:hover {
+    box-shadow: 0 0 30px color-mix(in srgb, var(--color-primary) 60%, transparent);
+    transform: translateY(-1px);
+  }
 }

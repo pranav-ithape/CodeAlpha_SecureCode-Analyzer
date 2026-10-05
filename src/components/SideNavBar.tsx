@@ -41,7 +41,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
   if (!isOpen) return null;
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 z-30 flex flex-col justify-between p-space-sm border-r border-outline-variant bg-surface-container-lowest transition-all duration-300">
+    <aside className="fixed left-0 top-0 h-full w-64 z-30 flex flex-col justify-between p-space-sm border-r border-outline-variant/50 bg-surface-container-lowest/70 backdrop-blur-xl transition-all duration-300">
       <div className="flex flex-col gap-space-sm">
         <div className="flex items-center justify-between px-space-sm py-space-xs border-b border-outline-variant pb-space-sm">
           <div className="flex items-center gap-2.5 overflow-hidden">
@@ -56,7 +56,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
             </div>
           </div>
           <button className="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors" onClick={toggleSidebar}>
-            <span className="material-symbols-outlined text-sm">left_panel_close</span>
+            <span className="material-symbols-outlined text-sm">menu</span>
           </button>
         </div>
         

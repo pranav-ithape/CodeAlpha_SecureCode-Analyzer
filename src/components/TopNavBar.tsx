@@ -14,7 +14,7 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => 
 
 
   return (
-    <header className="flex justify-between items-center w-full px-space-lg h-14 border-b border-outline-variant bg-surface-container-low z-20 flex-shrink-0">
+    <header className="flex justify-between items-center w-full px-space-lg h-14 border-b border-outline-variant/50 bg-surface-container-low/60 backdrop-blur-md z-20 flex-shrink-0">
       <div className="flex items-center gap-space-md flex-1 max-w-xl">
         {!sidebarOpen && (
           <button 

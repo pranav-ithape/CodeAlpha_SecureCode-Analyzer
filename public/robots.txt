@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+
+Disallow: /projects
+Disallow: /new-scan
+Disallow: /scan-history
+Disallow: /scans/
+Disallow: /findings
+Disallow: /recommendations
+Disallow: /reports
+Disallow: /security-rules
+Disallow: /secure-coding-guide
+Disallow: /settings
+Disallow: /api/
+
+Sitemap: https://securecodeauditor.com/sitemap.xml

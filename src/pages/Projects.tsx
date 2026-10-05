@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../utils/apiFetch';
 
@@ -137,8 +138,8 @@ const Projects: React.FC = () => {
         </div>
       )}
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      {isModalOpen && createPortal(
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-surface border border-outline-variant rounded-xl w-full max-w-md p-6 shadow-2xl ">
             <h2 className="text-xl font-bold text-on-surface mb-4">Create New Project</h2>
             <form onSubmit={handleCreateProject} className="space-y-4">
@@ -181,7 +182,8 @@ const Projects: React.FC = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

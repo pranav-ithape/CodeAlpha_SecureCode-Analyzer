@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Rule from '../models/Rule';
+import { User } from '../models/User';
 
 export const getRules = async (req: Request, res: Response) => {
   try {
@@ -11,19 +12,33 @@ export const getRules = async (req: Request, res: Response) => {
   }
 };
 
-export const updateRuleStatus = async (req: Request, res: Response) => {
+export const updateRuleStatus = async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const user = await User.findById(userId);
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SECURITY_ANALYST')) {
+      res.status(403).json({ error: 'Forbidden: Insufficient permissions to modify rules.' });
+      return;
+    }
+
     const { id } = req.params;
     const { status } = req.body;
     
     if (status !== 'Active' && status !== 'Inactive') {
-      return res.status(400).json({ error: 'Invalid status' });
+      res.status(400).json({ error: 'Invalid status' });
+      return;
     }
     
     const rule = await Rule.findByIdAndUpdate(id, { status }, { new: true });
     
     if (!rule) {
-      return res.status(404).json({ error: 'Rule not found' });
+      res.status(404).json({ error: 'Rule not found' });
+      return;
     }
     
     res.json(rule);
