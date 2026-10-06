@@ -38,6 +38,7 @@ import aiRoutes from './routes/ai.routes';
 import manualReviewRoutes from './routes/manual-review.routes';
 import reportRoutes from './routes/report.routes';
 import settingsRoutes from './routes/settings.routes';
+import profileRoutes from './routes/profile.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/scans', authenticate, scanRoutes);
@@ -49,6 +50,7 @@ app.use('/api/ai', authenticate, aiRoutes);
 app.use('/api/manual-reviews', authenticate, manualReviewRoutes);
 app.use('/api/reports', authenticate, reportRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/profile', authenticate, profileRoutes);
 
 // Basic health check
 app.get('/api/health', (req, res) => {

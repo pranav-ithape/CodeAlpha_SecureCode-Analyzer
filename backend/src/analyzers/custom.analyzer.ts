@@ -32,6 +32,7 @@ export const analyzeCustomCode = async (sourceCode: string, language: string, fi
             impact: `Confidence: ${rule.confidence}`,
             recommendation: rule.remediation,
             status: 'OPEN',
+            scanner: 'Custom Regex',
             cwe: rule.cwe,
             owasp: rule.owasp,
             snippet: line.trim()

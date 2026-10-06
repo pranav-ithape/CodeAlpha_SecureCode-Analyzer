@@ -16,6 +16,7 @@ export interface IFinding extends Document {
   cwe?: string;
   owasp?: string;
   snippet?: string;
+  scanner?: string;
   reviewerComment?: string;
   reviewerName?: string;
   reviewTimestamp?: Date;
@@ -44,6 +45,7 @@ const FindingSchema = new Schema<IFinding>({
   cwe: { type: String },
   owasp: { type: String },
   snippet: { type: String },
+  scanner: { type: String },
   reviewerComment: { type: String },
   reviewerName: { type: String },
   reviewTimestamp: { type: Date }

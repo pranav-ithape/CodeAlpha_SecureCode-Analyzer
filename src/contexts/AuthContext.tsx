@@ -6,6 +6,20 @@ export interface User {
   name: string;
   email: string;
   role?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  displayName?: string;
+  phone?: string;
+  jobTitle?: string;
+  company?: string;
+  location?: string;
+  bio?: string;
+  website?: string;
+  linkedin?: string;
+  github?: string;
+  profileImage?: string;
+  createdAt?: string;
 }
 
 interface AuthContextType {

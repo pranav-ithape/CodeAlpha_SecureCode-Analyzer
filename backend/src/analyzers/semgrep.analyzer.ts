@@ -86,7 +86,12 @@ export const analyzeSemgrepCode = async (sourceCode: string, language: SemgrepSu
             description: res.extra?.message || 'A security vulnerability was found.',
             impact: res.extra?.metadata?.impact ? `Impact: ${res.extra.metadata.impact}` : 'Confidence: HIGH',
             recommendation: res.extra?.metadata?.recommendation || 'Review the code based on Semgrep findings.',
-            status: 'OPEN'
+            status: 'OPEN',
+            scanner: 'Semgrep',
+            ruleId: res.check_id,
+            cwe: res.extra?.metadata?.cwe ? (Array.isArray(res.extra.metadata.cwe) ? res.extra.metadata.cwe[0] : res.extra.metadata.cwe) : undefined,
+            owasp: res.extra?.metadata?.owasp ? (Array.isArray(res.extra.metadata.owasp) ? res.extra.metadata.owasp[0] : res.extra.metadata.owasp) : undefined,
+            snippet: res.extra?.lines
           }));
           resolve(findings);
         } catch (parseError) {

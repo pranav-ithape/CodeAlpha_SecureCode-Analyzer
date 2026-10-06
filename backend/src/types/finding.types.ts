@@ -15,6 +15,7 @@ export interface Finding {
   cwe?: string;
   owasp?: string;
   snippet?: string;
+  scanner?: string;
 }
 
 export interface ScanSummary {

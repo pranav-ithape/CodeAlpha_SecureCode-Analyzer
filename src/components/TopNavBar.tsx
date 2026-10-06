@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface TopNavBarProps { 
   sidebarOpen: boolean;
@@ -10,6 +11,8 @@ interface TopNavBarProps {
 
 const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => {
   const { theme, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
+  const [profileOpen, setProfileOpen] = React.useState(false);
 
 
 
@@ -45,8 +48,34 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ sidebarOpen, toggleSidebar }) => 
           <span className="material-symbols-outlined text-sm">add</span>
           <span>New Scan</span>
         </Link>
-        <div className="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant overflow-hidden flex items-center justify-center text-on-surface font-label-code-sm font-bold ml-1 cursor-pointer">
-          <span className="material-symbols-outlined text-base text-primary">account_circle</span>
+        <div className="relative">
+          <div 
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant overflow-hidden flex items-center justify-center text-on-surface font-label-code-sm font-bold ml-1 cursor-pointer"
+          >
+            {user?.profileImage ? (
+              <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <span className="material-symbols-outlined text-base text-primary">account_circle</span>
+            )}
+          </div>
+          {profileOpen && (
+            <div className="absolute top-full right-0 mt-2 w-48 rounded-lg bg-surface-container-high border border-outline-variant shadow-lg z-50 overflow-hidden">
+              <Link to="/settings" onClick={() => setProfileOpen(false)} className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-highest transition-colors">
+                Settings
+              </Link>
+              <div className="border-t border-outline-variant my-1"></div>
+              <button 
+                onClick={() => {
+                  setProfileOpen(false);
+                  logout();
+                }}
+                className="w-full text-left px-4 py-2 text-sm text-error hover:bg-surface-container-highest transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

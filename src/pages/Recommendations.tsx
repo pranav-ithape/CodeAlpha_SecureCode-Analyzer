@@ -22,6 +22,7 @@ const Recommendations: React.FC = () => {
   const [analyses, setAnalyses] = useState<PopulatedAIAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,7 +62,6 @@ const Recommendations: React.FC = () => {
     );
   }
 
-  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredAnalyses = analyses.filter(a => {
     const f = a.findingId;

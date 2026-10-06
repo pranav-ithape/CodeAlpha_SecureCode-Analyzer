@@ -61,12 +61,7 @@ const FindingDetails: React.FC = () => {
   const [generatingAI, setGeneratingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchFinding();
-    fetchAIAnalysis();
-  }, [findingId]);
-
-  const fetchFinding = async () => {
+  const fetchFinding = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -85,9 +80,9 @@ const FindingDetails: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [findingId]);
 
-  const fetchAIAnalysis = async () => {
+  const fetchAIAnalysis = React.useCallback(async () => {
     try {
       const res = await apiFetch(`/api/ai/analysis/${findingId}`);
       if (res.ok) {
@@ -99,7 +94,14 @@ const FindingDetails: React.FC = () => {
     } catch (err) {
       console.error('Error fetching AI analysis:', err);
     }
-  };
+  }, [findingId]);
+
+  useEffect(() => {
+    fetchFinding();
+    fetchAIAnalysis();
+  }, [fetchFinding, fetchAIAnalysis]);
+
+
 
   const generateAIRecommendation = async () => {
     setGeneratingAI(true);
@@ -420,8 +422,9 @@ const FindingDetails: React.FC = () => {
               </div>
               <div>
                 <span className="text-outline block mb-1">Scanner</span>
-                <span className="text-on-surface">{finding.scanner}</span>
+                <span className="text-on-surface font-mono">{finding.scanner}</span>
               </div>
+
               <div>
                 <span className="text-outline block mb-1">File</span>
                 <span className="text-on-surface font-mono break-all">{finding.file_name}</span>

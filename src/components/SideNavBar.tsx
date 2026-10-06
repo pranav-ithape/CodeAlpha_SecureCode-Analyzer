@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -8,9 +8,8 @@ interface SideNavBarProps {
 }
 
 const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -35,7 +34,6 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
     { name: 'Reports', path: '/reports', icon: 'assessment' },
     { name: 'Security Rules', path: '/security-rules', icon: 'rule' },
     { name: 'Secure Coding Guide', path: '/secure-coding-guide', icon: 'menu_book' },
-    { name: 'Settings', path: '/settings', icon: 'settings' },
   ];
 
   if (!isOpen) return null;
@@ -92,40 +90,25 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ isOpen, toggleSidebar }) => {
       </div>
       
       <div className="flex flex-col gap-2 pt-space-sm border-t border-outline-variant">
+        <NavLink 
+          to="/settings"
+          className={({ isActive }) => `flex items-center gap-2.5 px-3 py-1.5 rounded font-label-code-sm text-label-code-sm transition-colors ${isActive ? 'bg-surface-container-high text-primary font-medium' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low'}`}
+        >
+          <span className="material-symbols-outlined text-base">settings</span>
+          <span>Settings</span>
+        </NavLink>
         <a className="flex items-center gap-2.5 px-3 py-1.5 rounded font-label-code-sm text-label-code-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
           <span className="material-symbols-outlined text-base">menu_book</span>
           <span>Documentation</span>
         </a>
 
-        <div className="relative">
-          <div 
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center justify-between p-2 rounded-lg bg-surface-container border border-outline-variant cursor-pointer hover:bg-surface-container-high transition-colors"
-          >
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-7 h-7 rounded bg-surface-container-highest flex items-center justify-center font-label-code-sm text-primary font-bold">
-                {user?.name.charAt(0).toUpperCase() || 'U'}
-              </div>
-              <div className="truncate">
-                <div className="font-headline-sm text-body-sm font-semibold text-on-surface truncate">{user?.name || 'User Account'}</div>
-                <div className="font-label-code-sm text-[10px] text-outline truncate">{user?.email || 'user@example.com'}</div>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-sm text-outline">more_vert</span>
-          </div>
-
-          {showDropdown && (
-            <div className="absolute bottom-full left-0 mb-2 w-full rounded-lg bg-surface-container-high border border-outline-variant shadow-lg z-50">
-              <button 
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-2 text-sm text-error hover:bg-surface-container-highest rounded-lg transition-colors flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-base">logout</span>
-                Sign Out
-              </button>
-            </div>
-          )}
-        </div>
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-2.5 px-3 py-1.5 rounded font-label-code-sm text-label-code-sm text-error hover:bg-error/10 hover:text-error transition-colors w-full text-left"
+        >
+          <span className="material-symbols-outlined text-base">logout</span>
+          <span>Sign Out</span>
+        </button>
       </div>
     </aside>
   );

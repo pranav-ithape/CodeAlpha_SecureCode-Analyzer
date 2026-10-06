@@ -49,7 +49,11 @@ export const analyzePythonCode = async (sourceCode: string, fileName?: string): 
             description: res.issue_text,
             impact: `Confidence: ${res.issue_confidence}`,
             recommendation: `Review the code and consult Bandit documentation for ${res.test_id}`,
-            status: 'OPEN'
+            status: 'OPEN',
+            scanner: 'Bandit',
+            ruleId: res.test_id,
+            cwe: res.issue_cwe ? `CWE-${res.issue_cwe.id}` : undefined,
+            snippet: res.code
           }));
           resolve(findings);
         } catch (parseError) {

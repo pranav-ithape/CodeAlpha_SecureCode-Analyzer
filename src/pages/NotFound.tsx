@@ -5,7 +5,7 @@ import SEO from '../components/SEO';
 const NotFound: React.FC = () => {
   return (
     <div className="bg-background text-on-surface min-h-screen flex flex-col items-center justify-center p-6 text-center">
-      <SEO title="Page Not Found | SecureCode Auditor" noindex />
+      <SEO title="Page Not Found | SecureCode Auditor" robots="noindex,nofollow" />
       <div className="w-16 h-16 rounded-xl bg-surface-container border border-outline-variant flex items-center justify-center mb-6">
         <span className="material-symbols-outlined text-4xl text-primary">error</span>
       </div>

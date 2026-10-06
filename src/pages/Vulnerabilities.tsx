@@ -41,7 +41,6 @@ const Vulnerabilities: React.FC = () => {
   const [severityFilter, setSeverityFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [projectFilter, setProjectFilter] = useState(searchParams.get('project') || 'All');
-  const [scannerFilter, setScannerFilter] = useState('All');
   const [languageFilter] = useState('All');
   const [reviewStatusFilter, setReviewStatusFilter] = useState('All');
   const [decisionFilter, setDecisionFilter] = useState('All');
@@ -74,12 +73,7 @@ const Vulnerabilities: React.FC = () => {
       const res = await apiFetch(`/api/findings?${queryParams.toString()}`);
       if (res.ok) {
         const data = await res.json();
-        // Frontend scanner filter
-        let filteredData = data;
-        if (scannerFilter !== 'All') {
-          filteredData = data.filter((f: Finding) => f.scanner.toLowerCase() === scannerFilter.toLowerCase());
-        }
-        setFindings(filteredData);
+        setFindings(data);
       } else {
         setError(true);
       }
@@ -97,7 +91,7 @@ const Vulnerabilities: React.FC = () => {
       fetchFindings();
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [search, severityFilter, statusFilter, projectFilter, scannerFilter, languageFilter, reviewStatusFilter, decisionFilter]);
+  }, [search, severityFilter, statusFilter, projectFilter, languageFilter, reviewStatusFilter, decisionFilter]);
 
   const summary = {
     total: findings.length,
@@ -196,11 +190,7 @@ const Vulnerabilities: React.FC = () => {
               <option value={projectFilter}>{projectFilter}</option>
             )}
           </select>
-          <select value={scannerFilter} onChange={e => setScannerFilter(e.target.value)} className="h-10 px-3 bg-surface-container border border-outline-variant rounded text-on-surface text-sm focus:border-primary outline-none">
-            <option value="All">All Scanners</option>
-            <option value="Bandit">Bandit</option>
-            <option value="Semgrep">Semgrep</option>
-          </select>
+
           <select value={reviewStatusFilter} onChange={e => setReviewStatusFilter(e.target.value)} className="h-10 px-3 bg-surface-container border border-outline-variant rounded text-on-surface text-sm focus:border-primary outline-none">
             <option value="All">All Review Status</option>
             <option value="Reviewed">Reviewed</option>
@@ -240,7 +230,6 @@ const Vulnerabilities: React.FC = () => {
                   <th className="px-4 py-3 font-medium">Project</th>
                   <th className="px-4 py-3 font-medium">File</th>
                   <th className="px-4 py-3 font-medium">Line</th>
-                  <th className="px-4 py-3 font-medium">Scanner</th>
                   <th className="px-4 py-3 font-medium">Status</th>
                   <th className="px-4 py-3 font-medium">Review</th>
                   <th className="px-4 py-3 font-medium">Date</th>
@@ -265,7 +254,6 @@ const Vulnerabilities: React.FC = () => {
                     <td className="px-4 py-3 text-on-surface-variant truncate max-w-[150px]">{finding.project_name}</td>
                     <td className="px-4 py-3 text-outline font-mono text-xs truncate max-w-[150px]" title={finding.file_name}>{finding.file_name}</td>
                     <td className="px-4 py-3 text-outline font-mono text-xs">{finding.line_number}</td>
-                    <td className="px-4 py-3 text-on-surface-variant">{finding.scanner}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-medium px-2 py-1 rounded whitespace-nowrap ${
                         finding.status === 'Open' ? 'bg-surface-container-high text-on-surface' :

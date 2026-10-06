@@ -28,7 +28,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       message: 'User created successfully',
       token,
-      user: { id: user._id, name: user.name, email: user.email }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName, username: user.username, displayName: user.displayName, phone: user.phone, jobTitle: user.jobTitle, company: user.company, location: user.location, bio: user.bio, website: user.website, linkedin: user.linkedin, github: user.github, profileImage: user.profileImage, createdAt: user.createdAt }
     });
     
     await logAudit({
@@ -71,7 +71,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName, username: user.username, displayName: user.displayName, phone: user.phone, jobTitle: user.jobTitle, company: user.company, location: user.location, bio: user.bio, website: user.website, linkedin: user.linkedin, github: user.github, profileImage: user.profileImage, createdAt: user.createdAt }
     });
     
     await logAudit({ userId: user._id.toString(), action: 'LOGIN_SUCCESS', resourceType: 'User', status: 'SUCCESS' });
@@ -94,7 +94,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName, username: user.username, displayName: user.displayName, phone: user.phone, jobTitle: user.jobTitle, company: user.company, location: user.location, bio: user.bio, website: user.website, linkedin: user.linkedin, github: user.github, profileImage: user.profileImage, createdAt: user.createdAt } });
   } catch (error: any) {
     res.status(500).json({ error: 'Error fetching user data' });
   }

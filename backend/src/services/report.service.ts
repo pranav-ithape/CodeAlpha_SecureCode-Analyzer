@@ -34,6 +34,10 @@ export const generateReport = async (scanId: string, format: 'pdf' | 'json' | 'h
 
   const combinedFindings = findings.map(f => ({
     ...f,
+    cwe: f.cwe || f.category,
+    owasp: f.owasp || f.category,
+    ruleId: f.ruleId || f.category,
+    scanner: f.scanner || (f.language && f.language.toLowerCase() === 'python' ? 'Bandit' : (f.language ? 'Semgrep' : undefined)),
     aiAnalysis: aiAnalyses.find(ai => ai.findingId.toString() === f._id.toString()),
     manualReview: manualReviews.find(mr => mr.findingId.toString() === f._id.toString())
   }));
@@ -831,7 +835,7 @@ const generatePDF = async (htmlContent: string, filePath: string): Promise<void>
   
   try {
     const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    await page.setContent(htmlContent, { waitUntil: 'load' });
     
     await page.pdf({
       path: filePath,
